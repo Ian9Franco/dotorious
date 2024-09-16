@@ -122,7 +122,7 @@ export const Navigation: React.FC = () => {
               ))}
               {userName && (
                 <div className="flex justify-end w-full">
-                  <span className="text-zinc-300">Welcome, {userName}</span>
+                  <span className="text-zinc-300">Ah sos vos {userName}</span>
                 </div>
               )}
               </div>
