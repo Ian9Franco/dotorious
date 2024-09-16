@@ -16,6 +16,11 @@ interface Hero {
   winRate?: number
 }
 
+interface HeroWinRate {
+  heroId: number;
+  winRate: number;
+}
+
 export default function StrategiesPage() {
   const [team, setTeam] = useState<Hero[]>([])
   const [combo, setCombo] = useState<Hero[]>([])
@@ -85,9 +90,9 @@ export default function StrategiesPage() {
           'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRATZ_API_KEY}`
         }
       })
-      const data = await response.json()
+      const data: HeroWinRate[] = await response.json()
       
-      const heroWinRates = new Map(data.map((hero: any) => [hero.heroId, hero.winRate]))
+      const heroWinRates = new Map(data.map(hero => [hero.heroId, hero.winRate]))
 
       return heroes.map(hero => ({
         ...hero,
@@ -129,18 +134,18 @@ export default function StrategiesPage() {
         <div className="w-full h-px bg-zinc-800" />
         <div className="grid grid-cols-1 gap-8 mx-auto lg:grid-cols-2">
           <div className="flex flex-col items-start justify-between rounded-lg border border-zinc-700 p-6 min-h-[400px] flex-grow">
-          <h3 className="text-xl font-medium text-zinc-300">Team Generator</h3>
-          <p className="mt-2 text-zinc-400">Generate a balanced team composition.</p>
-          <div className="mt-4 mb-6 w-full">
-            <button
-              onClick={handleGenerateTeam}
-              disabled={isGeneratingTeam}
-              className="w-full px-4 py-2 text-sm font-medium text-zinc-300 bg-zinc-800 rounded-md hover:bg-zinc-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:ring-opacity-50"
-            >
-              {isGeneratingTeam ? 'Generating...' : 'Generate Team'}
-            </button>
-          </div>
-          <TeamBuilder team={team} showLane={true} />
+            <h3 className="text-xl font-medium text-zinc-300">Team Generator</h3>
+            <p className="mt-2 text-zinc-400">Generate a balanced team composition.</p>
+            <div className="mt-4 mb-6 w-full">
+              <button
+                onClick={handleGenerateTeam}
+                disabled={isGeneratingTeam}
+                className="w-full px-4 py-2 text-sm font-medium text-zinc-300 bg-zinc-800 rounded-md hover:bg-zinc-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:ring-opacity-50"
+              >
+                {isGeneratingTeam ? 'Generating...' : 'Generate Team'}
+              </button>
+            </div>
+            <TeamBuilder team={team} showLane={true} />
           </div>
   
           <div className="flex flex-col items-start justify-between rounded-lg border border-zinc-700 p-6 min-h-[400px] flex-grow">
@@ -158,7 +163,6 @@ export default function StrategiesPage() {
             <TeamBuilder team={combo} showLane={false} />
           </div>
         </div>
-
       </div>
     </div>
   )

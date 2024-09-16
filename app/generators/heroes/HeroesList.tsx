@@ -2,10 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { heroesData } from '../../data/heroesData'; // Importa los datos de héroes
+import Image from 'next/image';
+import { heroesData } from '../../data/heroesData';
 
 const HeroesList: React.FC = () => {
-  // Agrupar héroes por atributo
   const groupedHeroes = heroesData.reduce((acc, hero) => {
     const attribute = hero.primary_attr;
     if (!acc[attribute]) {
@@ -29,12 +29,14 @@ const HeroesList: React.FC = () => {
               <Link href={`/generators/heroes/${hero.id}`} key={hero.id}>
                 <div
                   className="flex flex-col items-center justify-center p-4 rounded-lg border border-zinc-700 bg-zinc-800"
-                  style={{ width: '150px', height: '200px' }} // Contenedor vacío
+                  style={{ width: '150px', height: '200px' }}
                 >
-                  <img
+                  <Image
                     src={hero.image}
                     alt={hero.name}
-                    className="w-full h-full object-cover rounded-lg mb-2"
+                    width={120}
+                    height={120}
+                    className="object-cover rounded-lg mb-2"
                   />
                   <span className="text-zinc-300 text-center">{hero.name}</span>
                   <span className="text-zinc-400 text-center">

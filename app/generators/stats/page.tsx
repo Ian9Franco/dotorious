@@ -9,8 +9,18 @@ import { app } from "../../firebase/firebaseConfig"
 const auth = getAuth(app)
 const db = getDatabase(app)
 
-// OpenDota API function
-const fetchPlayerData = async (playerId: string) => {
+interface PlayerData {
+  profile?: {
+    personaname?: string;
+  };
+  mmr_estimate?: {
+    estimate?: number;
+  };
+  win?: number;
+  lose?: number;
+}
+
+const fetchPlayerData = async (playerId: string): Promise<PlayerData | null> => {
   try {
     const response = await fetch(`https://api.opendota.com/api/players/${playerId}`)
     if (!response.ok) throw new Error('Failed to fetch player data')
@@ -29,7 +39,7 @@ export default function StatsPage() {
   const [error, setError] = useState("")
   const [isSignUp, setIsSignUp] = useState(false)
   const [isIdSaved, setIsIdSaved] = useState(false)
-  const [playerData, setPlayerData] = useState<any>(null)
+  const [playerData, setPlayerData] = useState<PlayerData | null>(null)
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
