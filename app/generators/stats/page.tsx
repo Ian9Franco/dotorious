@@ -70,7 +70,7 @@ export default function StatsPage() {
     }
   }
 
-  const handleAuth = async (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
       if (isSignUp) {
