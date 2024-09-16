@@ -1,6 +1,16 @@
-import React from "react";
+// app/generators/page.tsx
+
+'use client'
+
+import React, { useState, useEffect } from "react";
 import { Navigation } from "../components/nav";
 import Link from "next/link";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User } from "firebase/auth";
+import { getDatabase, ref, set, get } from "firebase/database";
+import { app } from "../firebase/firebaseConfig";
+
+const auth = getAuth(app);
+const db = getDatabase(app);
 
 const generators = [
   {
@@ -21,14 +31,101 @@ const generators = [
 ];
 
 export default function GeneratorsPage() {
+  const [showModal, setShowModal] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [playerId, setPlayerId] = useState("");
+  const [user, setUser] = useState<User | null>(null);
+  const [error, setError] = useState("");
+  const [isSignUp, setIsSignUp] = useState(false);
+
+  // Listen for authentication state changes
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+      if (user) {
+        checkIfIdSaved(user.uid);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Check if player ID is saved in the database
+  const checkIfIdSaved = async (userId: string) => {
+    const playerIdRef = ref(db, `players/${userId}/playerId`);
+    const snapshot = await get(playerIdRef);
+    if (snapshot.exists()) {
+      setPlayerId(snapshot.val());
+    }
+  };
+
+  // Handle authentication (login/signup)
+  const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      if (isSignUp) {
+        await createUserWithEmailAndPassword(auth, email, password);
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+      }
+      setError("");
+      setShowModal(false);
+    } catch (error) {
+      setError(isSignUp ? "Failed to sign up. Please try again." : "Failed to log in. Please check your credentials.");
+    }
+  };
+
+  // Handle logout
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setError("");
+      setPlayerId("");
+    } catch (error) {
+      setError("Failed to log out. Please try again.");
+    }
+  };
+
+  // Handle player ID submission
+  const handleSubmitId = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+
+    try {
+      await set(ref(db, `players/${user.uid}/playerId`), playerId);
+      setError("");
+    } catch (error) {
+      setError("Failed to save player ID. Please try again.");
+    }
+  };
+
   return (
     <div className="relative pb-16">
       <Navigation />
       <div className="px-6 pt-20 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-16 md:pt-24 lg:pt-32">
         <div className="max-w-2xl mx-auto lg:mx-0">
-          <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
-            Generators
-          </h2>
+          {/* Container for title and login button */}
+          <div className="flex justify-between items-center">
+            <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
+              Generators
+            </h2>
+            {/* Display login/logout button */}
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors duration-300"
+              >
+                Log Out
+              </button>
+            ) : (
+              <button
+                onClick={() => setShowModal(true)}
+                className="px-4 py-2 bg-zinc-600 text-white rounded hover:bg-zinc-500 transition-colors duration-300"
+              >
+                Login
+              </button>
+            )}
+          </div>
           <p className="mt-4 text-zinc-400">
             Explore various Dota 2 tools and statistics.
           </p>
@@ -66,6 +163,110 @@ export default function GeneratorsPage() {
           ))}
         </div>
       </div>
+
+      {/* Login Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-zinc-800 p-8 rounded-lg max-w-md w-full">
+            <h3 className="text-2xl font-bold text-zinc-100 mb-4">
+              {isSignUp ? "Sign Up" : "Login"}
+            </h3>
+            <form onSubmit={handleAuth} className="space-y-4">
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-zinc-300"
+                >
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="mt-1 block w-full rounded-md border-zinc-600 bg-zinc-700 text-zinc-100 shadow-sm focus:border-zinc-500 focus:ring-zinc-500"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-zinc-300"
+                >
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="mt-1 block w-full rounded-md border-zinc-600 bg-zinc-700 text-zinc-100 shadow-sm focus:border-zinc-500 focus:ring-zinc-500"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full px-4 py-2 bg-zinc-600 text-white rounded hover:bg-zinc-500 transition-colors duration-300"
+              >
+                {isSignUp ? "Sign Up" : "Log In"}
+              </button>
+            </form>
+            <button
+              onClick={() => setIsSignUp(!isSignUp)}
+              className="mt-4 w-full px-4 py-2 bg-zinc-700 text-zinc-300 rounded hover:bg-zinc-600 transition-colors duration-300"
+            >
+              {isSignUp
+                ? "Already have an account? Log In"
+                : "Don't have an account? Sign Up"}
+            </button>
+            <button
+              onClick={() => setShowModal(false)}
+              className="mt-4 w-full px-4 py-2 bg-zinc-700 text-zinc-300 rounded hover:bg-zinc-600 transition-colors duration-300"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Player ID Modal */}
+      {user && !playerId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-zinc-800 p-8 rounded-lg max-w-md w-full">
+            <h3 className="text-2xl font-bold text-zinc-100 mb-4">Enter Your Player ID</h3>
+            <form onSubmit={handleSubmitId} className="space-y-4">
+              <div>
+                <label
+                  htmlFor="playerId"
+                  className="block text-sm font-medium text-zinc-300"
+                >
+                  Player ID
+                </label>
+                <input
+                  type="text"
+                  id="playerId"
+                  value={playerId}
+                  onChange={(e) => setPlayerId(e.target.value)}
+                  className="mt-1 block w-full rounded-md border-zinc-600 bg-zinc-700 text-zinc-100 shadow-sm focus:border-zinc-500 focus:ring-zinc-500"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full px-4 py-2 bg-zinc-600 text-white rounded hover:bg-zinc-500 transition-colors duration-300"
+              >
+                Save Player ID
+              </button>
+            </form>
+            <button
+              onClick={() => setPlayerId("")}
+              className="mt-4 w-full px-4 py-2 bg-zinc-700 text-zinc-300 rounded hover:bg-zinc-600 transition-colors duration-300"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
