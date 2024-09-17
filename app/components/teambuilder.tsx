@@ -32,9 +32,9 @@ const TeamBuilder: React.FC<TeamBuilderProps> = ({ team }) => {
             <span className="block">{assignLine(hero).split(' ')[0]}</span>
             <span className="block">{assignLine(hero).split(' ')[1]}</span>
           </p>
-          {hero.winRate !== undefined && (
+          {/* {{hero.winRate !== undefined && (
             <p className="text-xs text-zinc-500">Win Rate: {(hero.winRate * 100).toFixed(2)}%</p>
-          )}
+          )}} */}
         </div>
       ))}
     </div>
