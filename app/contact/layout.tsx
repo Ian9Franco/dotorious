@@ -1,4 +1,4 @@
-import "../../styles/globals.css";
+import "../../styles/globals.css";  // Asegúrate de que la ruta es correcta
 import { Inter } from "next/font/google";
 import LocalFont from "next/font/local";
 import { Metadata } from "next";
@@ -12,8 +12,7 @@ export const metadata: Metadata = {
   description: "WebApp de dota 2 Desarrollada por Ian9Franco",
   openGraph: {
     title: "Dotorious.com",
-    description:
-      "WebApp de dota 2 Desarrollada por Ian9Franco",
+    description: "WebApp de dota 2 Desarrollada por Ian9Franco",
     url: "https://dotorio.vercel.app/",
     siteName: "Dotorious.com",
     images: [
@@ -42,8 +41,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
   },
   icons: {
-    shortcut: "/public/favicon.png",
-  }, 
+    shortcut: "/favicon.png",  // Cambiado para asegurarse de que la ruta es correcta
+  },
 };
 
 const inter = Inter({
@@ -62,14 +61,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={[inter.variable, calSans.variable].join(" ")} >
+    <html lang="en" className={[inter.variable, calSans.variable].join(" ")}>
       <head>
         <Analytics />
       </head>
-      <body
-        className={`bg-black ${process.env.NODE_ENV === "development" ? "debug-screens" : undefined
-          }`}
-      >
+      <body className="bg-black">
         {children}
       </body>
     </html>

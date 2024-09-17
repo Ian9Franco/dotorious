@@ -29,7 +29,6 @@ export const Navigation: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Check if user data is in localStorage
     const cachedUser = localStorage.getItem('user');
     if (cachedUser) {
       const parsedUser = JSON.parse(cachedUser);
@@ -40,13 +39,11 @@ export const Navigation: React.FC = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
-        // Cache user data
         localStorage.setItem('user', JSON.stringify(user));
         fetchUserName(user.uid);
       } else {
         setUser(null);
         setUserName(null);
-        // Clear cached user data
         localStorage.removeItem('user');
       }
     });
@@ -55,7 +52,7 @@ export const Navigation: React.FC = () => {
   }, []);
 
   const fetchUserName = (userId: string) => {
-    const userRef = dbRef(db, `players/${userId}/playerId`);  // Cambiado a dbRef
+    const userRef = dbRef(db, `players/${userId}/playerId`);
     onValue(userRef, (snapshot) => {
       const playerId = snapshot.val();
       if (playerId) {
@@ -64,7 +61,6 @@ export const Navigation: React.FC = () => {
           .then((data) => {
             const name = data.profile?.personaname || null;
             setUserName(name);
-            // Cache user name
             localStorage.setItem('userName', name);
           })
           .catch((error) => console.error("Error fetching player data:", error));
@@ -78,17 +74,15 @@ export const Navigation: React.FC = () => {
     return parts.join("/") || "/";
   };
 
-  // Hide navigation on the home page
+  // Ocultar navegación en la página de inicio
   if (pathname === "/") return null;
 
-  // Define navigation sections
+  // Secciones de navegación
   const navigationSections = [
-    { name: "Generators", href: "/generators" },
-    { name: "Projects", href: "/projects" },
-    { name: "Contact", href: "/contact" },
+    { name: "Dota2", href: "/generators" },
   ];
 
-  // Filter sections based on current route
+  // Filtrar las secciones dependiendo de la ruta actual
   const filteredSections = navigationSections.filter(
     (section) => section.href !== pathname
   );
@@ -110,6 +104,8 @@ export const Navigation: React.FC = () => {
             <ArrowLeft className="w-6 h-6" />
           </Link>
 
+          {/* Mostrar enlaces de navegación solo en la página de contacto */}
+          {pathname === "/contact" && (
             <div className="flex justify-between gap-8">
               {filteredSections.map((section) => (
                 <Link
@@ -120,14 +116,15 @@ export const Navigation: React.FC = () => {
                   {section.name}
                 </Link>
               ))}
-              {userName && (
-                <div className="flex justify-end w-full">
-                  <span className="text-zinc-300">Ah sos vos {userName}</span>
-                </div>
-              )}
-              </div>
+            </div>
+          )}
 
-
+          {/* Mostrar el nombre del usuario si está disponible */}
+          {userName && (
+            <div className="flex justify-end w-full">
+              <span className="text-zinc-300">Ah sos vos {userName}</span>
+            </div>
+          )}
 
           <Menu />
         </div>

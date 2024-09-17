@@ -1,65 +1,43 @@
-'use client'
-
 import React from 'react'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
-
-interface Hero {
-  id: number
-  name: string
-  primary_attr: string
-  attack_type: string
-  roles: string[]
-  image: string
-  lane?: string
-  winRate?: number
-}
+import { Hero } from '../data/heroesData'
+import { assignLine } from '../data/heroUtils'
 
 interface TeamBuilderProps {
   team: Hero[]
-  showLane: boolean
 }
 
-const TeamBuilder: React.FC<TeamBuilderProps> = ({ team, showLane }) => {
+const TeamBuilder: React.FC<TeamBuilderProps> = ({ team }) => {
+  const lineOrder = ["Hard Carry", "Mid", "Offlane", "Secondary Support", "Primary Support"];
+
+  const sortedTeam = [...team].sort((a, b) => 
+    lineOrder.indexOf(assignLine(a)) - lineOrder.indexOf(assignLine(b))
+  );
+
   return (
-    <div className="grid grid-cols-5 gap-4 mt-6"> {/* Cambiado de grid-cols-3 a grid-cols-5 */}
-  {team.map((hero, index) => (
-    <motion.div
-      key={hero.id}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className={`flex flex-col items-center rounded-lg bg-zinc-800 shadow-lg overflow-hidden ${hero.winRate && hero.winRate > 45 ? 'ring-2 ring-yellow-400' : ''}`}
-    >
-      {showLane && hero.lane && (
-        <div className="w-full bg-zinc-700 py-1 px-2 text-center">
-          <span className="text-xs font-semibold text-zinc-300">{hero.lane}</span>
+    <div className="team-display flex flex-wrap justify-between items-end w-full">
+      {sortedTeam.map((hero, index) => (
+        <div key={hero.id} className={`hero text-center flex-1 min-w-[120px] max-w-[180px] px-2 mb-4 opacity-0 animate-fade-in`} style={{animationDelay: `${index * 100}ms`}}>
+          <div className="relative w-full pb-[150%] mb-2">
+            <Image
+              src={hero.image}
+              alt={hero.name}
+              layout="fill"
+              objectFit="cover"
+              className="rounded-lg border-2 border-zinc-700 transition-all duration-300 hover:scale-105 hover:border-zinc-500"
+            />
+          </div>
+          <p className="text-sm text-zinc-300 font-medium truncate">{hero.name}</p>
+          <p className="text-xs text-zinc-400 leading-tight">
+            <span className="block">{assignLine(hero).split(' ')[0]}</span>
+            <span className="block">{assignLine(hero).split(' ')[1]}</span>
+          </p>
+          {hero.winRate !== undefined && (
+            <p className="text-xs text-zinc-500">Win Rate: {(hero.winRate * 100).toFixed(2)}%</p>
+          )}
         </div>
-      )}
-      <div className="w-full h-32 relative"> {/* Ajuste del tamaño de las imágenes */}
-        <Image
-          src={hero.image}
-          alt={hero.name}
-          layout="fill"
-          objectFit="cover"
-        />
-      </div>
-      <div className="p-4 text-center">
-        <span className="text-sm font-semibold text-zinc-100">{hero.name}</span>
-        <span className="text-[0.85rem] text-zinc-400 block mt-1">{/* Texto ajustado a 0.85rem */}
-          {hero.roles.join(', ')}
-        </span>
-        {hero.winRate && hero.winRate > 45 && (
-          <span className="text-xs text-yellow-400 block mt-1">
-            Win Rate: {hero.winRate.toFixed(2)}%
-          </span>
-        )}
-      </div>
-    </motion.div>
-  ))}
-</div>
-
-
+      ))}
+    </div>
   )
 }
 

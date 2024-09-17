@@ -1,13 +1,14 @@
 // heroesData.tsx
 
-interface Hero {
+export interface Hero {
     id: number;
     name: string;
     primary_attr: string;
     attack_type: string;
     roles: string[];
     image: string;
-  }
+/*     line: string;
+ */  }
   
   // Exporta los datos de héroes
   export const heroesData: Hero[] = [
@@ -21,8 +22,9 @@ interface Hero {
           "Escape",
           "Nuker"
         ],
-        "image": "/images/heroesIMG/antimage.png"
-      },
+        "image": "/images/heroesIMG/antimage.png",
+/*         "linea": "Carry"
+ */      },
       {
         "id": 2,
         "name": "Axe",
@@ -34,8 +36,9 @@ interface Hero {
           "Disabler",
           "Carry"
         ],
-        "image": "/images/heroesIMG/axe.png"
-      },
+        "image": "/images/heroesIMG/axe.png",
+/*         "linea": "Offlane", "Mid"
+ */      },
     {
       "id": 3,
       "name": "Bane",
@@ -47,8 +50,9 @@ interface Hero {
         "Nuker",
         "Durable"
       ],
-      "image": "/images/heroesIMG/bane.png"
-    },
+      "image": "/images/heroesIMG/bane.png",
+/*         "linea": ["Apoyo Primario", "Apoyo Secundario"]
+ */    },
     {
       "id": 4,
       "name": "Bloodseeker",
@@ -60,8 +64,9 @@ interface Hero {
         "Nuker",
         "Initiator"
       ],
-      "image": "/images/heroesIMG/bloodseeker.png"
-    },
+      "image": "/images/heroesIMG/bloodseeker.png",
+/*         "linea": ["Carry"]
+ */    },
     {
       "id": 5,
       "name": "Crystal Maiden",
@@ -72,8 +77,9 @@ interface Hero {
         "Disabler",
         "Nuker"
       ],
-      "image": "/images/heroesIMG/crystal_maiden.png"
-    },
+      "image": "/images/heroesIMG/crystal_maiden.png",
+/*         "linea": ["Apoyo Primario","Apoyo Secundario"]
+ */    },
     {
       "id": 6,
       "name": "Drow Ranger",
@@ -84,8 +90,9 @@ interface Hero {
         "Disabler",
         "Pusher"
       ],
-      "image": "/images/heroesIMG/drow_ranger.png"
-    },
+      "image": "/images/heroesIMG/drow_ranger.png",
+/*         "linea": ["Carry", "Mid"]
+ */    },
     {
       "id": 7,
       "name": "Earthshaker",
@@ -97,8 +104,9 @@ interface Hero {
         "Disabler",
         "Nuker"
       ],
-      "image": "/images/heroesIMG/earthshaker.png"
-    },
+      "image": "/images/heroesIMG/earthshaker.png",
+/*         "linea": ["Apoyo Secundario", "Offlane", "Mid"]
+ */    },
     {
       "id": 8,
       "name": "Juggernaut",
@@ -109,8 +117,9 @@ interface Hero {
         "Pusher",
         "Escape"
       ],
-      "image": "/images/heroesIMG/juggernaut.png"
-    },
+      "image": "/images/heroesIMG/juggernaut.png",
+/*         "linea": ["Carry"]
+ */    },
     {
       "id": 9,
       "name": "Mirana",
@@ -123,7 +132,9 @@ interface Hero {
         "Nuker",
         "Disabler"
       ],
-      "image": "/images/heroesIMG/mirana.png"
+      "image": "/images/heroesIMG/mirana.png",
+/*         "linea": ["Apoyo Secundario", "Mid", "Carry"]
+ */
     },
     {
       "id": 10,
@@ -1485,7 +1496,6 @@ interface Hero {
         "primary_attr": "all",
         "attack_type": "Melee",
         "roles": [
-          "Carry",
           "Nuker",
           "Disabler",
           "Durable",
@@ -1552,7 +1562,7 @@ interface Hero {
         "primary_attr": "str",
         "attack_type": "Melee",
         "roles": [
-          "Carry",
+          "Nuker",
           "Initiator",
           "Disabler",
           "Durable"
@@ -1570,7 +1580,7 @@ interface Hero {
           "Escape",
           "Disabler"
         ],
-        "image": "/images/heroesIMG/ringmaster.png"
+        "image": "/images/heroesIMG/Ringmaster.png"
       },
       {
         "id": 135,
@@ -1578,7 +1588,7 @@ interface Hero {
         "primary_attr": "str",
         "attack_type": "Melee",
         "roles": [
-          "Carry",
+          "Nuker",
           "Durable"
         ],
         "image": "/images/heroesIMG/dawnbreaker.png"
@@ -1590,7 +1600,6 @@ interface Hero {
         "attack_type": "Melee",
         "roles": [
           "Support",
-          "Carry",
           "Initiator",
           "Disabler",
           "Escape"
@@ -1622,4 +1631,5 @@ interface Hero {
         "image": "/images/heroesIMG/muerta.png"
       }
     ]
-  
+
+

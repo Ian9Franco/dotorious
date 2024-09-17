@@ -4,6 +4,7 @@ import LocalFont from "next/font/local";
 import { Metadata } from "next";
 import { Analytics } from "./components/analytics";
 import { Navigation } from "./components/nav";
+import '../styles/heroes.css'
 
 export const metadata: Metadata = {
   title: {
