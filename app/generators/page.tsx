@@ -1,5 +1,3 @@
-// app/generators/page.tsx
-
 'use client'
 
 import React, { useState, useEffect } from "react";
@@ -36,10 +34,9 @@ export default function GeneratorsPage() {
   const [password, setPassword] = useState("");
   const [playerId, setPlayerId] = useState("");
   const [user, setUser] = useState<User | null>(null);
-  const [error, setError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
 
-  // Listen for authentication state changes
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setUser(user);
@@ -50,7 +47,6 @@ export default function GeneratorsPage() {
     return () => unsubscribe();
   }, []);
 
-  // Check if player ID is saved in the database
   const checkIfIdSaved = async (userId: string) => {
     const playerIdRef = ref(db, `players/${userId}/playerId`);
     const snapshot = await get(playerIdRef);
@@ -59,7 +55,6 @@ export default function GeneratorsPage() {
     }
   };
 
-  // Handle authentication (login/signup)
   const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -68,48 +63,44 @@ export default function GeneratorsPage() {
       } else {
         await signInWithEmailAndPassword(auth, email, password);
       }
-      setError("");
+      setErrorMessage("");
       setShowModal(false);
     } catch (error) {
-      setError(isSignUp ? "Failed to sign up. Please try again." : "Failed to log in. Please check your credentials.");
+      setErrorMessage(isSignUp ? "Failed to sign up. Please try again." : "Failed to log in. Please check your credentials.");
     }
   };
 
-  // Handle logout
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      setError("");
+      setErrorMessage("");
       setPlayerId("");
     } catch (error) {
-      setError("Failed to log out. Please try again.");
+      setErrorMessage("Failed to log out. Please try again.");
     }
   };
 
-  // Handle player ID submission
   const handleSubmitId = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
 
     try {
       await set(ref(db, `players/${user.uid}/playerId`), playerId);
-      setError("");
+      setErrorMessage("");
     } catch (error) {
-      setError("Failed to save player ID. Please try again.");
+      setErrorMessage("Failed to save player ID. Please try again.");
     }
   };
 
   return (
     <div className="relative pb-16">
-      <Navigation />
+      <Navigation teamLogic="lane" setTeamLogic={() => {}} />
       <div className="px-6 pt-20 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-16 md:pt-24 lg:pt-32">
         <div className="max-w-2xl mx-auto lg:mx-0">
-          {/* Container for title and login button */}
           <div className="flex justify-between items-center">
             <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
               Generators
             </h2>
-            {/* Display login/logout button */}
             {user ? (
               <button
                 onClick={handleLogout}
@@ -164,7 +155,6 @@ export default function GeneratorsPage() {
         </div>
       </div>
 
-      {/* Login Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-zinc-800 p-8 rounded-lg max-w-md w-full">
@@ -229,7 +219,6 @@ export default function GeneratorsPage() {
         </div>
       )}
 
-      {/* Player ID Modal */}
       {user && !playerId && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-zinc-800 p-8 rounded-lg max-w-md w-full">
@@ -265,6 +254,12 @@ export default function GeneratorsPage() {
               Close
             </button>
           </div>
+        </div>
+      )}
+
+      {errorMessage && (
+        <div className="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded">
+          {errorMessage}
         </div>
       )}
     </div>

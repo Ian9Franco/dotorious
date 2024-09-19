@@ -1,44 +1,55 @@
-'use client';
+"use client"; // Indica que este componente debe ser procesado como cliente
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { Navigation } from '../../components/nav';
 import TeamBuilder from '../../components/teambuilder';
 import { heroesData, Hero } from '../../data/heroesData';
 
+
 export default function StrategiesPage() {
   const [team, setTeam] = useState<Hero[]>([]);
   const [isGeneratingTeam, setIsGeneratingTeam] = useState(false);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
-  const [teamLogic, setTeamLogic] = useState<"lane" | "legis">("lane");
+  const [teamLogic, setTeamLogic] = useState<"lane" | "legis" | "Asuza">("lane");
 
   useEffect(() => {
     setAudio(new Audio('/audio/team/announcer_battle_prepare_01.mp3'));
   }, []);
+
+  useEffect(() => {
+    setTeam([]);
+  }, [teamLogic]);
 
   const generateTeam = useCallback((): Hero[] => {
     const newTeam: Hero[] = [];
     const roles = ['Carry', 'Mid', 'Offlane', 'Secondary Support', 'Primary Support'];
     const availableHeroes = [...heroesData];
 
-    roles.forEach((role) => {
-      const heroesForRole = availableHeroes.filter(hero => hero[teamLogic].includes(role));
-      
-      if (heroesForRole.length > 0) {
-        const selectedHero = heroesForRole[Math.floor(Math.random() * heroesForRole.length)];
+    if (teamLogic === "Asuza") {
+      const heroIds = [106, 12];
+      const selectedHeroes = availableHeroes.filter(hero => heroIds.includes(hero.id));
+      roles.forEach(() => {
+        const selectedHero = selectedHeroes[Math.floor(Math.random() * selectedHeroes.length)];
         newTeam.push(selectedHero);
-        
-        // Remove the selected hero and any heroes that share a role with it
-        const index = availableHeroes.findIndex(hero => hero.id === selectedHero.id);
-        if (index > -1) {
-          availableHeroes.splice(index, 1);
-        }
-        availableHeroes.forEach((hero, idx) => {
-          if (hero[teamLogic].some(r => selectedHero[teamLogic].includes(r))) {
-            availableHeroes.splice(idx, 1);
+      });
+    } else {
+      roles.forEach((role) => {
+        const heroesForRole = availableHeroes.filter(hero => hero[teamLogic].includes(role));
+        if (heroesForRole.length > 0) {
+          const selectedHero = heroesForRole[Math.floor(Math.random() * heroesForRole.length)];
+          newTeam.push(selectedHero);
+          const index = availableHeroes.findIndex(hero => hero.id === selectedHero.id);
+          if (index > -1) {
+            availableHeroes.splice(index, 1);
           }
-        });
-      }
-    });
+          availableHeroes.forEach((hero, idx) => {
+            if (hero[teamLogic].some(r => selectedHero[teamLogic].includes(r))) {
+              availableHeroes.splice(idx, 1);
+            }
+          });
+        }
+      });
+    }
 
     return newTeam;
   }, [teamLogic]);
@@ -46,7 +57,6 @@ export default function StrategiesPage() {
   const handleGenerateTeam = useCallback(() => {
     setIsGeneratingTeam(true);
     if (audio) audio.play();
-
     const newTeam = generateTeam();
     setTeam(newTeam);
     setIsGeneratingTeam(false);
@@ -55,11 +65,22 @@ export default function StrategiesPage() {
   const handleHeroChange = useCallback((roleIndex: number) => {
     const roles = ['Carry', 'Mid', 'Offlane', 'Secondary Support', 'Primary Support'];
     const currentRole = roles[roleIndex];
-    const availableHeroes = heroesData.filter(hero => 
-      hero[teamLogic].includes(currentRole) && 
-      !team.some(teamHero => teamHero.id === hero.id || teamHero[teamLogic].some(r => hero[teamLogic].includes(r)))
-    );
-
+    
+    let availableHeroes: Hero[];
+  
+    if (teamLogic === 'Asuza') {
+      const asuzaHeroes = heroesData.filter(hero => hero.id === 106 || hero.id === 12);
+      availableHeroes = asuzaHeroes;
+    } else {
+      availableHeroes = heroesData.filter(hero =>
+        hero[teamLogic]?.includes(currentRole) &&
+        !team.some(teamHero =>
+          teamHero.id === hero.id ||
+          teamHero[teamLogic]?.includes(currentRole)
+        )
+      );
+    }
+  
     if (availableHeroes.length > 0) {
       const newHero = availableHeroes[Math.floor(Math.random() * availableHeroes.length)];
       const newTeam = [...team];

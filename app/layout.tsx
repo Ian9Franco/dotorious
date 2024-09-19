@@ -3,8 +3,8 @@ import { Inter } from "next/font/google";
 import LocalFont from "next/font/local";
 import { Metadata } from "next";
 import { Analytics } from "./components/analytics";
-import { Navigation } from "./components/nav";
 import '../styles/heroes.css'
+import ClientLayout from "./ClientLayout";
 
 export const metadata: Metadata = {
   title: {
@@ -67,14 +67,7 @@ export default function RootLayout({
       <head>
         <Analytics />
       </head>
-      <body
-        className={`bg-black ${
-          process.env.NODE_ENV === "development" ? "debug-screens" : undefined
-        }`}
-      >
-        <Navigation />
-        {children}
-      </body>
+      <ClientLayout>{children}</ClientLayout>
     </html>
   );
 }

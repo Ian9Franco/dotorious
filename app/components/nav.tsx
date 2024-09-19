@@ -14,8 +14,8 @@ const auth = getAuth(app);
 const db = getDatabase(app);
 
 interface NavigationProps {
-  teamLogic: "lane" | "legis";
-  setTeamLogic: React.Dispatch<React.SetStateAction<"lane" | "legis">>;
+  teamLogic: 'lane' | 'legis' | 'Asuza';
+  setTeamLogic: React.Dispatch<React.SetStateAction<'lane' | 'legis' | 'Asuza'>>;
 }
 
 export const Navigation: React.FC<NavigationProps> = ({ teamLogic, setTeamLogic }) => {
@@ -79,8 +79,14 @@ export const Navigation: React.FC<NavigationProps> = ({ teamLogic, setTeamLogic 
   };
 
   const toggleTeamLogic = () => {
-    setTeamLogic(prev => prev === "lane" ? "legis" : "lane");
+    setTeamLogic(prev => {
+      if (prev === "lane") return "legis";
+      if (prev === "legis") return "Asuza"; // Changed 'asuza' to 'Asuza'
+      return "lane";
+    });
   };
+  
+  
 
   // Hide navigation on the home page
   if (pathname === "/") return null;
@@ -94,6 +100,9 @@ export const Navigation: React.FC<NavigationProps> = ({ teamLogic, setTeamLogic 
   const filteredSections = navigationSections.filter(
     (section) => section.href !== pathname
   );
+
+  // Check if the current page is 'Strategies'
+  const isStrategiesPage = pathname.includes("/generators/strategies");
 
   return (
     <header ref={ref}>
@@ -131,12 +140,16 @@ export const Navigation: React.FC<NavigationProps> = ({ teamLogic, setTeamLogic 
           {userName && (
             <div className="flex justify-end items-center gap-4">
               <span className="text-zinc-300">Ah sos vos {userName}</span>
-              <button
-                onClick={toggleTeamLogic}
-                className="px-3 py-1 text-sm bg-zinc-800 text-zinc-200 rounded-md hover:bg-zinc-700 transition-colors"
-              >
-                {teamLogic === "lane" ? "Lane" : "Legis"}
-              </button>
+              {isStrategiesPage && (
+                <button
+                  onClick={toggleTeamLogic}
+                  className="px-3 py-1 text-sm bg-zinc-800 text-zinc-200 rounded-md hover:bg-zinc-700 transition-colors"
+                >
+                     {teamLogic === "lane" && "Switch to Legis"}
+                    {teamLogic === "legis" && "Switch to Asuza"}
+                    {teamLogic === "Asuza" && "Switch to Lane"}
+                </button>
+              )}
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className="p-2 text-zinc-300 hover:text-zinc-100"
