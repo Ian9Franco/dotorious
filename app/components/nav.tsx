@@ -1,22 +1,29 @@
 "use client";
-import { ArrowLeft } from "lucide-react";
+
+import { ArrowLeft, Moon, Sun } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { Menu } from "./menu";
 import { usePathname } from "next/navigation";
-import { getAuth, onAuthStateChanged, User } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getDatabase, ref as dbRef, onValue } from "firebase/database";
 import { app } from "../firebase/firebaseConfig";
+import { useTheme } from "next-themes";
 
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-export const Navigation: React.FC = () => {
+interface NavigationProps {
+  teamLogic: "lane" | "legis";
+  setTeamLogic: React.Dispatch<React.SetStateAction<"lane" | "legis">>;
+}
+
+export const Navigation: React.FC<NavigationProps> = ({ teamLogic, setTeamLogic }) => {
   const ref = useRef<HTMLElement>(null);
   const [isIntersecting, setIntersecting] = useState(true);
   const pathname = usePathname();
   const [userName, setUserName] = useState<string | null>(null);
-  const [user, setUser] = useState<User | null>(null);
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     if (!ref.current) return;
@@ -32,17 +39,14 @@ export const Navigation: React.FC = () => {
     const cachedUser = localStorage.getItem('user');
     if (cachedUser) {
       const parsedUser = JSON.parse(cachedUser);
-      setUser(parsedUser);
       fetchUserName(parsedUser.uid);
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUser(user);
         localStorage.setItem('user', JSON.stringify(user));
         fetchUserName(user.uid);
       } else {
-        setUser(null);
         setUserName(null);
         localStorage.removeItem('user');
       }
@@ -74,15 +78,19 @@ export const Navigation: React.FC = () => {
     return parts.join("/") || "/";
   };
 
-  // Ocultar navegación en la página de inicio
+  const toggleTeamLogic = () => {
+    setTeamLogic(prev => prev === "lane" ? "legis" : "lane");
+  };
+
+  // Hide navigation on the home page
   if (pathname === "/") return null;
 
-  // Secciones de navegación
+  // Navigation sections
   const navigationSections = [
     { name: "Dota2", href: "/generators" },
   ];
 
-  // Filtrar las secciones dependiendo de la ruta actual
+  // Filter sections depending on the current route
   const filteredSections = navigationSections.filter(
     (section) => section.href !== pathname
   );
@@ -104,7 +112,7 @@ export const Navigation: React.FC = () => {
             <ArrowLeft className="w-6 h-6" />
           </Link>
 
-          {/* Mostrar enlaces de navegación solo en la página de contacto */}
+          {/* Show navigation links only on the contact page */}
           {pathname === "/contact" && (
             <div className="flex justify-between gap-8">
               {filteredSections.map((section) => (
@@ -119,10 +127,22 @@ export const Navigation: React.FC = () => {
             </div>
           )}
 
-          {/* Mostrar el nombre del usuario si está disponible */}
+          {/* Show the user's name if available */}
           {userName && (
-            <div className="flex justify-end w-full">
+            <div className="flex justify-end items-center gap-4">
               <span className="text-zinc-300">Ah sos vos {userName}</span>
+              <button
+                onClick={toggleTeamLogic}
+                className="px-3 py-1 text-sm bg-zinc-800 text-zinc-200 rounded-md hover:bg-zinc-700 transition-colors"
+              >
+                {teamLogic === "lane" ? "Lane" : "Legis"}
+              </button>
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="p-2 text-zinc-300 hover:text-zinc-100"
+              >
+                {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </button>
             </div>
           )}
 

@@ -16,33 +16,32 @@ const HeroesList: React.FC = () => {
   }, {} as Record<string, typeof heroesData>);
 
   return (
-    <div>
+    <div className="space-y-8">
       {Object.entries(groupedHeroes).map(([attribute, heroesList]) => (
-        <div key={attribute} className="mb-8">
-          <h2 className="text-2xl font-bold mb-4">
+        <div key={attribute}>
+          <h2 className="text-2xl font-bold mb-4 text-zinc-100">
             {attribute === 'str' ? 'Strength' :
              attribute === 'agi' ? 'Agility' :
              attribute === 'int' ? 'Intelligence' : 'Universal'}
           </h2>
-          <div className="flex flex-wrap gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2">
             {heroesList.map((hero) => (
               <Link href={`/generators/heroes/${hero.id}`} key={hero.id}>
-                <div
-                  className="flex flex-col items-center justify-center p-4 rounded-lg border border-zinc-700 bg-zinc-800"
-                  style={{ width: '150px', height: '200px' }}
-                >
-                  <Image
-                    src={hero.image}
-                    alt={hero.name}
-                    width={120}
-                    height={120}
-                    className="object-cover rounded-lg mb-2"
-                  />
-                  <span className="text-zinc-300 text-center">{hero.name}</span>
-                  <span className="text-zinc-400 text-center">
-                    {attribute === 'str' ? 'Strength' :
-                     attribute === 'agi' ? 'Agility' :
-                     attribute === 'int' ? 'Intelligence' : 'Universal'}
+                <div className="flex flex-col items-center justify-center p-2 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 transition-colors duration-200">
+                  <div className="relative w-16 h-16 mb-2">
+                    <Image
+                      src={hero.image}
+                      alt={hero.name}
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-md"
+                    />
+                  </div>
+                  <span className="text-zinc-300 text-xs text-center line-clamp-1">{hero.name}</span>
+                  <span className="text-zinc-400 text-xs text-center">
+                    {attribute === 'str' ? 'Str' :
+                     attribute === 'agi' ? 'Agi' :
+                     attribute === 'int' ? 'Int' : 'Uni'}
                   </span>
                 </div>
               </Link>

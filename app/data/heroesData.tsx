@@ -7,1629 +7,1511 @@ export interface Hero {
     attack_type: string;
     roles: string[];
     image: string;
-/*     line: string;
- */  }
+    lane: string[];
+    damage_type: string[];
+    skill: string[];
+    counters?: string[];
+    sinergia?: string[];
+    legis:string[];
+
+
+  }
   
   // Exporta los datos de héroes
   export const heroesData: Hero[] = [
     {
-        "id": 1,
-        "name": "Anti-Mage",
-        "primary_attr": "agi",
-        "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Escape",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/antimage.png",
-/*         "linea": "Carry"
- */      },
-      {
-        "id": 2,
-        "name": "Axe",
-        "primary_attr": "str",
-        "attack_type": "Melee",
-        "roles": [
-          "Initiator",
-          "Durable",
-          "Disabler",
-          "Carry"
-        ],
-        "image": "/images/heroesIMG/axe.png",
-/*         "linea": "Offlane", "Mid"
- */      },
+      "id": 1,
+      "name": "Anti-Mage",
+      "primary_attr": "agi",
+      "attack_type": "Melee",
+      "roles": ["Carry", "Escape", "Nuker"],
+      "image": "/images/heroesIMG/antimage.png",
+      "lane": ["Carry"],
+      "damage_type": ["Physical"],
+      "skill": ["Teleportation", "Magic Immunity"],
+      "legis": ["Mid"]
+    },
+    {
+      "id": 2,
+      "name": "Axe",
+      "primary_attr": "str",
+      "attack_type": "Melee",
+      "roles": ["Initiator", "Durable", "Disabler", "Carry"],
+      "image": "/images/heroesIMG/axe.png",
+      "lane": ["Offlane", "Carry"],
+      "damage_type": ["Physical", "Pure"],
+      "skill": ["Stun", "Armor", "Fear"],
+      "legis": ["Primary Support"]
+    },
     {
       "id": 3,
       "name": "Bane",
-      "primary_attr": "all",
+      "primary_attr": "int",
       "attack_type": "Ranged",
-      "roles": [
-        "Support",
-        "Disabler",
-        "Nuker",
-        "Durable"
-      ],
+      "roles": ["Support", "Disabler", "Nuker"],
       "image": "/images/heroesIMG/bane.png",
-/*         "linea": ["Apoyo Primario", "Apoyo Secundario"]
- */    },
+      "lane": ["Primary Support", "Mid"],
+      "damage_type": ["Magic", "Pure"],
+      "skill": ["Stun", "Fear", "Cure", "Immunity"],
+      "legis": ["Hard Carry"]
+    },
     {
       "id": 4,
       "name": "Bloodseeker",
       "primary_attr": "agi",
       "attack_type": "Melee",
-      "roles": [
-        "Carry",
-        "Disabler",
-        "Nuker",
-        "Initiator"
-      ],
+      "roles": ["Carry", "Disabler", "Nuker", "Initiator"],
       "image": "/images/heroesIMG/bloodseeker.png",
-/*         "linea": ["Carry"]
- */    },
+      "lane": ["Carry", "Offlane"],
+      "damage_type": ["Physical", "Pure"],
+      "skill": ["Silence", "Slow", "Stun"],
+      "legis": ["Primary Support"]
+    },
     {
       "id": 5,
       "name": "Crystal Maiden",
       "primary_attr": "int",
       "attack_type": "Ranged",
-      "roles": [
-        "Support",
-        "Disabler",
-        "Nuker"
-      ],
+      "roles": ["Support", "Disabler", "Nuker"],
       "image": "/images/heroesIMG/crystal_maiden.png",
-/*         "linea": ["Apoyo Primario","Apoyo Secundario"]
- */    },
+      "lane": ["Primary Support", "Secondary Support"],
+      "damage_type": ["Magic"],
+      "skill": ["Slow", "Immunity", "Cure"],
+      "legis": ["Hard Carry"]
+    },
     {
       "id": 6,
       "name": "Drow Ranger",
       "primary_attr": "agi",
       "attack_type": "Ranged",
-      "roles": [
-        "Carry",
-        "Disabler",
-        "Pusher"
-      ],
+      "roles": ["Carry", "Disabler", "Pusher"],
       "image": "/images/heroesIMG/drow_ranger.png",
-/*         "linea": ["Carry", "Mid"]
- */    },
+      "lane": ["Carry"],
+      "damage_type": ["Physical"],
+      "skill": ["Slow", "Silence"],
+      "legis": ["Mid"]
+    },
     {
       "id": 7,
       "name": "Earthshaker",
       "primary_attr": "str",
       "attack_type": "Melee",
-      "roles": [
-        "Support",
-        "Initiator",
-        "Disabler",
-        "Nuker"
-      ],
+      "roles": ["Support", "Initiator", "Disabler", "Nuker"],
       "image": "/images/heroesIMG/earthshaker.png",
-/*         "linea": ["Apoyo Secundario", "Offlane", "Mid"]
- */    },
+      "lane": ["Offlane", "Secondary Support"],
+      "damage_type": ["Physical"],
+      "skill": ["Stun", "Slow", "AoE"],
+      "legis": ["Primary Support"]
+    },
     {
       "id": 8,
       "name": "Juggernaut",
       "primary_attr": "agi",
       "attack_type": "Melee",
-      "roles": [
-        "Carry",
-        "Pusher",
-        "Escape"
-      ],
+      "roles": ["Carry", "Pusher", "Escape"],
       "image": "/images/heroesIMG/juggernaut.png",
-/*         "linea": ["Carry"]
- */    },
+      "lane": ["Carry"],
+      "damage_type": ["Physical", "Magic"],
+      "skill": ["Teleportation", "Immunity", "Cure"],
+      "legis": ["Primary Support"]
+    },
     {
       "id": 9,
       "name": "Mirana",
-      "primary_attr": "all",
+      "primary_attr": "agi",
       "attack_type": "Ranged",
-      "roles": [
-        "Carry",
-        "Support",
-        "Escape",
-        "Nuker",
-        "Disabler"
-      ],
+      "roles": ["Carry", "Support", "Escape", "Nuker", "Disabler"],
       "image": "/images/heroesIMG/mirana.png",
-/*         "linea": ["Apoyo Secundario", "Mid", "Carry"]
- */
+      "lane": ["Secondary Support", "Offlane"],
+      "damage_type": ["Physical", "Magic"],
+      "skill": ["Stun", "Teleportation", "Invisibility"],
+      "legis": ["Primary Support"]
     },
     {
       "id": 10,
       "name": "Morphling",
       "primary_attr": "agi",
       "attack_type": "Ranged",
-      "roles": [
-        "Carry",
-        "Escape",
-        "Durable",
-        "Nuker",
-        "Disabler"
-      ],
-      "image": "/images/heroesIMG/morphling.png"
+      "roles": ["Carry", "Escape", "Durable", "Nuker", "Disabler"],
+      "image": "/images/heroesIMG/morphling.png",
+      "lane": ["Carry"],
+      "damage_type": ["Physical", "Magic"],
+      "skill": ["Teleportation", "Invisibility", "Purification"],
+      "legis": ["Primary Support"]
     },
     {
       "id": 11,
       "name": "Shadow Fiend",
       "primary_attr": "agi",
       "attack_type": "Ranged",
-      "roles": [
-        "Carry",
-        "Nuker"
-      ],
-      "image": "/images/heroesIMG/nevermore.png"
+      "roles": ["Carry", "Nuker"],
+      "image": "/images/heroesIMG/nevermore.png",
+      "lane": ["Mid"],
+      "damage_type": ["Physical", "Magic"],
+      "skill": ["AoE", "Fear"],
+      "legis": ["Offlane"]
     },
     {
       "id": 12,
       "name": "Phantom Lancer",
       "primary_attr": "agi",
       "attack_type": "Melee",
-      "roles": [
-        "Carry",
-        "Escape",
-        "Pusher",
-        "Nuker"
-      ],
-      "image": "/images/heroesIMG/phantom_lancer.png"
+      "roles": ["Carry", "Escape", "Pusher", "Nuker"],
+      "image": "/images/heroesIMG/phantom_lancer.png",
+      "lane": ["Carry"],
+      "damage_type": ["Physical"],
+      "skill": ["Invisibility", "Slow", "Teleportation"],
+      "legis": ["Primary Support"]
     },
     {
       "id": 13,
       "name": "Puck",
       "primary_attr": "int",
       "attack_type": "Ranged",
-      "roles": [
-        "Initiator",
-        "Disabler",
-        "Escape",
-        "Nuker"
-      ],
-      "image": "/images/heroesIMG/puck.png"
+      "roles": ["Initiator", "Disabler", "Escape", "Nuker"],
+      "image": "/images/heroesIMG/puck.png",
+      "lane": ["Mid"],
+      "damage_type": ["Magic"],
+      "skill": ["Stun", "Silence", "Teleportation", "AoE"],
+      "legis": ["Hard Carry"]
     },
     {
       "id": 14,
       "name": "Pudge",
       "primary_attr": "str",
       "attack_type": "Melee",
-      "roles": [
-        "Disabler",
-        "Initiator",
-        "Durable",
-        "Nuker"
-      ],
-      "image": "/images/heroesIMG/pudge.png"
+      "roles": ["Disabler", "Initiator", "Durable", "Nuker"],
+      "image": "/images/heroesIMG/pudge.png",
+      "lane": ["Offlane", "Secondary Support"],
+      "damage_type": ["Magic", "Pure"],
+      "skill": ["Slow", "Stun", "Fear"],
+      "legis": ["Primary Support"]
     },
     {
       "id": 15,
       "name": "Razor",
       "primary_attr": "agi",
       "attack_type": "Ranged",
-      "roles": [
-        "Carry",
-        "Durable",
-        "Nuker",
-        "Pusher"
-      ],
-      "image": "/images/heroesIMG/razor.png"
+      "roles": ["Carry", "Durable", "Nuker", "Pusher"],
+      "image": "/images/heroesIMG/razor.png",
+      "lane": ["Carry", "Mid"],
+      "damage_type": ["Physical", "Magic"],
+      "skill": ["Slow", "Silence", "AoE"],
+      "legis": ["Primary Support"]
     },
-    {
-      "id": 16,
-      "name": "Sand King",
-      "primary_attr": "all",
-      "attack_type": "Melee",
-      "roles": [
-        "Initiator",
-        "Disabler",
-        "Support",
-        "Nuker",
-        "Escape"
-      ],
-      "image": "/images/heroesIMG/sand_king.png"
-    },
-    {
-      "id": 17,
-      "name": "Storm Spirit",
-      "primary_attr": "int",
-      "attack_type": "Ranged",
-      "roles": [
-        "Carry",
-        "Escape",
-        "Nuker",
-        "Initiator",
-        "Disabler"
-      ],
-      "image": "/images/heroesIMG/storm_spirit.png"
-    },
-    {
-      "id": 18,
-      "name": "Sven",
-      "primary_attr": "str",
-      "attack_type": "Melee",
-      "roles": [
-        "Carry",
-        "Disabler",
-        "Initiator",
-        "Durable",
-        "Nuker"
-      ],
-      "image": "/images/heroesIMG/sven.png"
-    },
-    {
-      "id": 19,
-      "name": "Tiny",
-      "primary_attr": "str",
-      "attack_type": "Melee",
-      "roles": [
-        "Carry",
-        "Nuker",
-        "Pusher",
-        "Initiator",
-        "Durable",
-        "Disabler"
-      ],
-      "image": "/images/heroesIMG/tiny.png"
-    },
-    {
-      "id": 20,
-      "name": "Vengeful Spirit",
-      "primary_attr": "all",
-      "attack_type": "Ranged",
-      "roles": [
-        "Support",
-        "Initiator",
-        "Disabler",
-        "Nuker",
-        "Escape"
-      ],
-      "image": "/images/heroesIMG/vengefulspirit.png"
-    },
-    {
-      "id": 21,
-      "name": "Windranger",
-      "primary_attr": "all",
-      "attack_type": "Ranged",
-      "roles": [
-        "Carry",
-        "Support",
-        "Disabler",
-        "Escape",
-        "Nuker"
-      ],
-      "image": "/images/heroesIMG/windrunner.png"
-    },
-    {
-      "id": 22,
-      "name": "Zeus",
-      "primary_attr": "int",
-      "attack_type": "Ranged",
-      "roles": [
-        "Nuker",
-        "Carry"
-      ],
-      "image": "/images/heroesIMG/zuus.png"
-    },
-    {
-      "id": 23,
-      "name": "Kunkka",
-      "primary_attr": "str",
-      "attack_type": "Melee",
-      "roles": [
-        "Carry",
-        "Support",
-        "Disabler",
-        "Initiator",
-        "Durable",
-        "Nuker"
-      ],
-      "image": "/images/heroesIMG/kunkka.png"
-    },
-    {
-      "id": 25,
-      "name": "Lina",
-      "primary_attr": "int",
-      "attack_type": "Ranged",
-      "roles": [
-        "Support",
-        "Carry",
-        "Nuker",
-        "Disabler"
-      ],
-      "image": "/images/heroesIMG/lina.png"
-    },
+      {
+        "id": 16,
+        "name": "Sand King",
+        "primary_attr": "str",
+        "attack_type": "Melee",
+        "roles": ["Initiator", "Disabler", "Support", "Nuker", "Escape"],
+        "image": "/images/heroesIMG/sand_king.png",
+        "lane": ["Offlane", "Secondary Support"],
+        "damage_type": ["Physical", "Magic"],
+        "skill": ["Stun", "AoE", "Slow"],
+        "legis": ["Carry"]
+      },
+      {
+        "id": 17,
+        "name": "Storm Spirit",
+        "primary_attr": "int",
+        "attack_type": "Ranged",
+        "roles": ["Carry", "Escape", "Nuker", "Initiator", "Disabler"],
+        "image": "/images/heroesIMG/storm_spirit.png",
+        "lane": ["Mid"],
+        "damage_type": ["Magic"],
+        "skill": ["Teleportation", "Silence", "AoE"],
+        "legis": ["Offlane"]
+      },
+      {
+        "id": 18,
+        "name": "Sven",
+        "primary_attr": "str",
+        "attack_type": "Melee",
+        "roles": ["Carry", "Disabler", "Initiator", "Durable", "Nuker"],
+        "image": "/images/heroesIMG/sven.png",
+        "lane": ["Carry", "Offlane"],
+        "damage_type": ["Physical"],
+        "skill": ["Stun", "AoE", "Slow"],
+        "legis": ["Primary Support"]
+      },
+      {
+        "id": 19,
+        "name": "Tiny",
+        "primary_attr": "str",
+        "attack_type": "Melee",
+        "roles": ["Carry", "Nuker", "Pusher", "Initiator", "Durable", "Disabler"],
+        "image": "/images/heroesIMG/tiny.png",
+        "lane": ["Offlane", "Mid"],
+        "damage_type": ["Physical", "Magic"],
+        "skill": ["Stun", "AoE", "Slow"],
+        "legis": ["Primary Support"]
+      },
+      {
+        "id": 20,
+        "name": "Vengeful Spirit",
+        "primary_attr": "agi",
+        "attack_type": "Ranged",
+        "roles": ["Support", "Initiator", "Disabler", "Nuker", "Escape"],
+        "image": "/images/heroesIMG/vengefulspirit.png",
+        "lane": ["Primary Support", "Secondary Support"],
+        "damage_type": ["Physical", "Magic"],
+        "skill": ["Displacement", "Stun", "Escape"],
+        "legis": ["Carry"]
+      }
+    ,
+      {
+        "id": 21,
+        "name": "Windranger",
+        "primary_attr": "agi",
+        "attack_type": "Ranged",
+        "roles": ["Carry", "Support", "Disabler", "Escape", "Nuker"],
+        "image": "/images/heroesIMG/windrunner.png",
+        "lane": ["Mid", "Secondary Support"],
+        "damage_type": ["Physical", "Magic"],
+        "skill": ["Stun", "Escape", "Slow"],
+        "legis": ["Carry"]
+      },
+      {
+        "id": 22,
+        "name": "Zeus",
+        "primary_attr": "int",
+        "attack_type": "Ranged",
+        "roles": ["Nuker", "Carry"],
+        "image": "/images/heroesIMG/zuus.png",
+        "lane": ["Mid"],
+        "damage_type": ["Magic"],
+        "skill": ["AoE", "Silence", "Displacement"],
+        "legis": ["Offlane"]
+      },
+      {
+        "id": 23,
+        "name": "Kunkka",
+        "primary_attr": "str",
+        "attack_type": "Melee",
+        "roles": ["Carry", "Disabler", "Initiator", "Durable", "Nuker"],
+        "image": "/images/heroesIMG/kunkka.png",
+        "lane": ["Offlane", "Carry"],
+        "damage_type": ["Physical", "Magic"],
+        "skill": ["Stun", "AoE", "Slow"],
+        "legis": ["Primary Support"]
+      },
+      {
+        "id": 25,
+        "name": "Lina",
+        "primary_attr": "int",
+        "attack_type": "Ranged",
+        "roles": ["Carry", "Nuker", "Disabler"],
+        "image": "/images/heroesIMG/lina.png",
+        "lane": ["Mid", "Carry"],
+        "damage_type": ["Magic"],
+        "skill": ["Stun", "AoE", "Slow"],
+        "legis": ["Offlane"]
+      }
+    ,
     {
       "id": 26,
       "name": "Lion",
       "primary_attr": "int",
       "attack_type": "Ranged",
-      "roles": [
-        "Support",
-        "Disabler",
-        "Nuker",
-        "Initiator"
-      ],
-      "image": "/images/heroesIMG/lion.png"
+      "roles": ["Support", "Disabler", "Nuker", "Initiator"],
+      "image": "/images/heroesIMG/lion.png",
+      "lane": ["Primary Support"],
+      "damage_type": ["Magic"],
+      "skill": ["Stun", "Hex", "Mana Drain"],
+      "legis": ["Carry"]
     },
     {
       "id": 27,
       "name": "Shadow Shaman",
       "primary_attr": "int",
       "attack_type": "Ranged",
-      "roles": [
-        "Support",
-        "Pusher",
-        "Disabler",
-        "Nuker",
-        "Initiator"
-      ],
-      "image": "/images/heroesIMG/shadow_shaman.png"
+      "roles": ["Support", "Pusher", "Disabler", "Nuker", "Initiator"],
+      "image": "/images/heroesIMG/shadow_shaman.png",
+      "lane": ["Primary Support"],
+      "damage_type": ["Magic"],
+      "skill": ["Stun", "Hex", "AoE"],
+      "legis": ["Carry"]
     },
     {
       "id": 28,
       "name": "Slardar",
       "primary_attr": "str",
       "attack_type": "Melee",
-      "roles": [
-        "Carry",
-        "Durable",
-        "Initiator",
-        "Disabler",
-        "Escape"
-      ],
-      "image": "/images/heroesIMG/slardar.png"
+      "roles": ["Carry", "Durable", "Initiator", "Disabler", "Escape"],
+      "image": "/images/heroesIMG/slardar.png",
+      "lane": ["Offlane", "Carry"],
+      "damage_type": ["Physical"],
+      "skill": ["Stun", "Slow"],
+      "legis": ["Primary Support"]
     },
     {
       "id": 29,
       "name": "Tidehunter",
       "primary_attr": "str",
       "attack_type": "Melee",
-      "roles": [
-        "Initiator",
-        "Durable",
-        "Disabler",
-        "Nuker",
-        "Carry"
-      ],
-      "image": "/images/heroesIMG/tidehunter.png"
+      "roles": ["Initiator", "Durable", "Disabler", "Nuker", "Carry"],
+      "image": "/images/heroesIMG/tidehunter.png",
+      "lane": ["Offlane"],
+      "damage_type": ["Physical", "Magic"],
+      "skill": ["AoE", "Stun"],
+      "legis": ["Carry"]
     },
     {
       "id": 30,
       "name": "Witch Doctor",
       "primary_attr": "int",
       "attack_type": "Ranged",
-      "roles": [
-        "Support",
-        "Nuker",
-        "Disabler"
-      ],
-      "image": "/images/heroesIMG/witch_doctor.png"
+      "roles": ["Support", "Nuker", "Disabler"],
+      "image": "/images/heroesIMG/witch_doctor.png",
+      "lane": ["Primary Support"],
+      "damage_type": ["Magic"],
+      "skill": ["AoE", "Slow"],
+      "legis": ["Carry"]
     },
     {
       "id": 31,
       "name": "Lich",
       "primary_attr": "int",
       "attack_type": "Ranged",
-      "roles": [
-        "Support",
-        "Nuker"
-      ],
-      "image": "/images/heroesIMG/lich.png"
+      "roles": ["Support", "Nuker"],
+      "image": "/images/heroesIMG/lich.png",
+      "lane": ["Primary Support"],
+      "damage_type": ["Magic"],
+      "skill": ["AoE", "Slow"],
+      "legis": ["Carry"]
     },
     {
       "id": 32,
       "name": "Riki",
       "primary_attr": "agi",
       "attack_type": "Melee",
-      "roles": [
-        "Carry",
-        "Escape",
-        "Disabler"
-      ],
-      "image": "/images/heroesIMG/riki.png"
+      "roles": ["Carry", "Escape", "Disabler"],
+      "image": "/images/heroesIMG/riki.png",
+      "lane": ["Carry"],
+      "damage_type": ["Physical"],
+      "skill": ["Invisibility", "Backstab"],
+      "legis": ["Primary Support"]
     },
     {
       "id": 33,
       "name": "Enigma",
-      "primary_attr": "all",
+      "primary_attr": "int",
       "attack_type": "Ranged",
-      "roles": [
-        "Disabler",
-        "Initiator",
-        "Pusher"
-      ],
-      "image": "/images/heroesIMG/enigma.png"
+      "roles": ["Disabler", "Initiator", "Pusher"],
+      "image": "/images/heroesIMG/enigma.png",
+      "lane": ["Offlane"],
+      "damage_type": ["Magic"],
+      "skill": ["AoE", "Black Hole"],
+      "legis": ["Carry"]
     },
     {
       "id": 34,
       "name": "Tinker",
       "primary_attr": "int",
       "attack_type": "Ranged",
-      "roles": [
-        "Carry",
-        "Nuker",
-        "Pusher"
-      ],
-      "image": "/images/heroesIMG/tinker.png"
+      "roles": ["Carry", "Nuker", "Pusher"],
+      "image": "/images/heroesIMG/tinker.png",
+      "lane": ["Mid"],
+      "damage_type": ["Magic"],
+      "skill": ["AoE", "Teleport"],
+      "legis": ["Offlane"]
     },
     {
       "id": 35,
       "name": "Sniper",
       "primary_attr": "agi",
       "attack_type": "Ranged",
-      "roles": [
-        "Carry",
-        "Nuker"
-      ],
-      "image": "/images/heroesIMG/sniper.png"
+      "roles": ["Carry", "Nuker"],
+      "image": "/images/heroesIMG/sniper.png",
+      "lane": ["Carry"],
+      "damage_type": ["Physical"],
+      "skill": ["Long Range", "Slow"],
+      "legis": ["Primary Support"]
     },
     {
       "id": 36,
       "name": "Necrophos",
       "primary_attr": "int",
       "attack_type": "Ranged",
-      "roles": [
-        "Carry",
-        "Nuker",
-        "Durable",
-        "Disabler"
-      ],
-      "image": "/images/heroesIMG/necrolyte.png"
+      "roles": ["Carry", "Nuker", "Durable", "Disabler"],
+      "image": "/images/heroesIMG/necrolyte.png",
+      "lane": ["Mid", "Offlane"],
+      "damage_type": ["Magic"],
+      "skill": ["Heal", "Reaper's Scythe"],
+      "legis": ["Carry"]
     },
     {
       "id": 37,
       "name": "Warlock",
       "primary_attr": "int",
       "attack_type": "Ranged",
-      "roles": [
-        "Support",
-        "Initiator",
-        "Disabler"
-      ],
-      "image": "/images/heroesIMG/warlock.png"
+      "roles": ["Support", "Initiator", "Disabler"],
+      "image": "/images/heroesIMG/warlock.png",
+      "lane": ["Primary Support"],
+      "damage_type": ["Magic"],
+      "skill": ["AoE", "Global"],
+      "legis": ["Carry"]
     },
     {
       "id": 38,
       "name": "Beastmaster",
-      "primary_attr": "all",
+      "primary_attr": "str",
       "attack_type": "Melee",
-      "roles": [
-        "Initiator",
-        "Disabler",
-        "Durable",
-        "Nuker"
-      ],
-      "image": "/images/heroesIMG/beastmaster.png"
+      "roles": ["Initiator", "Disabler", "Durable", "Nuker"],
+      "image": "/images/heroesIMG/beastmaster.png",
+      "lane": ["Offlane"],
+      "damage_type": ["Physical"],
+      "skill": ["Summon", "Roar"],
+      "legis": ["Carry"]
     },
     {
       "id": 39,
       "name": "Queen of Pain",
       "primary_attr": "int",
       "attack_type": "Ranged",
-      "roles": [
-        "Carry",
-        "Nuker",
-        "Escape"
-      ],
-      "image": "/images/heroesIMG/queenofpain.png"
+      "roles": ["Carry", "Nuker", "Escape"],
+      "image": "/images/heroesIMG/queenofpain.png",
+      "lane": ["Mid"],
+      "damage_type": ["Magic"],
+      "skill": ["AoE", "Blink"],
+      "legis": ["Primary Support"]
     },
     {
       "id": 40,
       "name": "Venomancer",
-      "primary_attr": "all",
+      "primary_attr": "agi",
       "attack_type": "Ranged",
-      "roles": [
-        "Support",
-        "Nuker",
-        "Initiator",
-        "Pusher",
-        "Disabler"
-      ],
-      "image": "/images/heroesIMG/venomancer.png"
+      "roles": ["Support", "Nuker", "Initiator", "Pusher", "Disabler"],
+      "image": "/images/heroesIMG/venomancer.png",
+      "lane": ["Offlane", "Primary Support"],
+      "damage_type": ["Magic"],
+      "skill": ["Poison", "AoE"],
+      "legis": ["Carry"]
     },
     {
       "id": 41,
       "name": "Faceless Void",
       "primary_attr": "agi",
       "attack_type": "Melee",
-      "roles": [
-        "Carry",
-        "Initiator",
-        "Disabler",
-        "Escape",
-        "Durable"
-      ],
-      "image": "/images/heroesIMG/faceless_void.png"
+      "roles": ["Carry", "Initiator", "Disabler", "Escape", "Durable"],
+      "image": "/images/heroesIMG/faceless_void.png",
+      "lane": ["Carry", "Offlane"],
+      "damage_type": ["Physical"],
+      "skill": ["Time Dilation", "Chronosphere"],
+      "legis": ["Primary Support"]
     },
     {
       "id": 42,
       "name": "Wraith King",
       "primary_attr": "str",
       "attack_type": "Melee",
-      "roles": [
-        "Carry",
-        "Support",
-        "Durable",
-        "Disabler",
-        "Initiator"
-      ],
-      "image": "/images/heroesIMG/skeleton_king.png"
+      "roles": ["Carry", "Durable", "Disabler", "Initiator"],
+      "image": "/images/heroesIMG/skeleton_king.png",
+      "lane": ["Carry", "Offlane"],
+      "damage_type": ["Physical"],
+      "skill": ["Reincarnation", "Stun"],
+      "legis": ["Support"]
     },
     {
       "id": 43,
       "name": "Death Prophet",
       "primary_attr": "int",
       "attack_type": "Ranged",
-      "roles": [
-        "Carry",
-        "Pusher",
-        "Nuker",
-        "Disabler"
-      ],
-      "image": "/images/heroesIMG/death_prophet.png"
+      "roles": ["Carry", "Pusher", "Nuker", "Disabler"],
+      "image": "/images/heroesIMG/death_prophet.png",
+      "lane": ["Mid", "Offlane"],
+      "damage_type": ["Magic"],
+      "skill": ["Exorcism", "Silence"],
+      "legis": ["Carry"]
     },
     {
       "id": 44,
       "name": "Phantom Assassin",
       "primary_attr": "agi",
       "attack_type": "Melee",
-      "roles": [
-        "Carry",
-        "Escape"
-      ],
-      "image": "/images/heroesIMG/phantom_assassin.png"
+      "roles": ["Carry", "Escape"],
+      "image": "/images/heroesIMG/phantom_assassin.png",
+      "lane": ["Carry"],
+      "damage_type": ["Physical"],
+      "skill": ["Evasion", "Critical Strike"],
+      "legis": ["Primary Support"]
     },
     {
       "id": 45,
       "name": "Pugna",
       "primary_attr": "int",
       "attack_type": "Ranged",
-      "roles": [
-        "Nuker",
-        "Pusher"
-      ],
-      "image": "/images/heroesIMG/pugna.png"
+      "roles": ["Nuker", "Pusher"],
+      "image": "/images/heroesIMG/pugna.png",
+      "lane": ["Mid", "Offlane"],
+      "damage_type": ["Magic"],
+      "skill": ["Decrepify", "Nether Blast"],
+      "legis": ["Carry"]
     },
     {
       "id": 46,
       "name": "Templar Assassin",
       "primary_attr": "agi",
       "attack_type": "Ranged",
-      "roles": [
-        "Carry",
-        "Escape"
-      ],
-      "image": "/images/heroesIMG/templar_assassin.png"
+      "roles": ["Carry", "Escape"],
+      "image": "/images/heroesIMG/templar_assassin.png",
+      "lane": ["Carry", "Mid"],
+      "damage_type": ["Physical"],
+      "skill": ["Refraction", "Trap"],
+      "legis": ["Primary Support"]
     },
     {
       "id": 47,
       "name": "Viper",
       "primary_attr": "agi",
       "attack_type": "Ranged",
-      "roles": [
-        "Carry",
-        "Durable",
-        "Initiator",
-        "Disabler"
-      ],
-      "image": "/images/heroesIMG/viper.png"
+      "roles": ["Carry", "Durable", "Initiator", "Disabler"],
+      "image": "/images/heroesIMG/viper.png",
+      "lane": ["Offlane"],
+      "damage_type": ["Magic"],
+      "skill": ["Poison Attack", "Viper Strike"],
+      "legis": ["Carry"]
     },
     {
       "id": 48,
       "name": "Luna",
       "primary_attr": "agi",
       "attack_type": "Ranged",
-      "roles": [
-        "Carry",
-        "Nuker",
-        "Pusher"
-      ],
-      "image": "/images/heroesIMG/luna.png"
+      "roles": ["Carry", "Nuker", "Pusher"],
+      "image": "/images/heroesIMG/luna.png",
+      "lane": ["Carry"],
+      "damage_type": ["Physical"],
+      "skill": ["Glaive Bounce", "Lunar Blessing"],
+      "legis": ["Primary Support"]
     },
     {
       "id": 49,
       "name": "Dragon Knight",
       "primary_attr": "str",
       "attack_type": "Melee",
-      "roles": [
-        "Carry",
-        "Pusher",
-        "Durable",
-        "Disabler",
-        "Initiator",
-        "Nuker"
-      ],
-      "image": "/images/heroesIMG/dragon_knight.png"
+      "roles": ["Carry", "Pusher", "Durable", "Disabler", "Initiator", "Nuker"],
+      "image": "/images/heroesIMG/dragon_knight.png",
+      "lane": ["Offlane", "Mid"],
+      "damage_type": ["Physical", "Magic"],
+      "skill": ["Breathe Fire", "Dragon Tail"],
+      "legis": ["Carry"]
     },
     {
       "id": 50,
       "name": "Dazzle",
       "primary_attr": "all",
       "attack_type": "Ranged",
-      "roles": [
-        "Support",
-        "Nuker",
-        "Disabler"
-      ],
-      "image": "/images/heroesIMG/dazzle.png"
+      "roles": ["Support", "Nuker", "Disabler"],
+      "image": "/images/heroesIMG/dazzle.png",
+      "lane": ["Support"],
+      "damage_type": ["Magic"],
+      "skill": ["Shadow Wave", "Poison Touch"],
+      "legis": ["Carry"]
     },
     {
       "id": 51,
       "name": "Clockwerk",
       "primary_attr": "all",
       "attack_type": "Melee",
-      "roles": [
-        "Initiator",
-        "Disabler",
-        "Durable",
-        "Nuker"
-      ],
-      "image": "/images/heroesIMG/rattletrap.png"
+      "roles": ["Initiator", "Disabler", "Durable", "Nuker"],
+      "image": "/images/heroesIMG/rattletrap.png",
+      "lane": ["Offlane"],
+      "damage_type": ["Physical"],
+      "skill": ["Hookshot", "Battery Assault"],
+      "legis": ["Carry"]
     },
     {
       "id": 52,
       "name": "Leshrac",
       "primary_attr": "int",
       "attack_type": "Ranged",
-      "roles": [
-        "Carry",
-        "Support",
-        "Nuker",
-        "Pusher",
-        "Disabler"
-      ],
-      "image": "/images/heroesIMG/leshrac.png"
+      "roles": ["Carry", "Support", "Nuker", "Pusher", "Disabler"],
+      "image": "/images/heroesIMG/leshrac.png",
+      "lane": ["Mid", "Offlane"],
+      "damage_type": ["Magic"],
+      "skill": ["Diabolic Edict", "Lightning Storm"],
+      "legis": ["Carry"]
     },
     {
       "id": 53,
       "name": "Nature's Prophet",
       "primary_attr": "int",
       "attack_type": "Ranged",
-      "roles": [
-        "Carry",
-        "Pusher",
-        "Escape",
-        "Nuker"
-      ],
-      "image": "/images/heroesIMG/furion.png"
+      "roles": ["Carry", "Pusher", "Escape", "Nuker"],
+      "image": "/images/heroesIMG/furion.png",
+      "lane": ["Offlane", "Mid"],
+      "damage_type": ["Magic"],
+      "skill": ["Sprout", "Teleportation"],
+      "legis": ["Carry"]
     },
     {
       "id": 54,
       "name": "Lifestealer",
       "primary_attr": "str",
       "attack_type": "Melee",
-      "roles": [
-        "Carry",
-        "Durable",
-        "Escape",
-        "Disabler"
-      ],
-      "image": "/images/heroesIMG/life_stealer.png"
+      "roles": ["Carry", "Durable", "Escape", "Disabler"],
+      "image": "/images/heroesIMG/life_stealer.png",
+      "lane": ["Carry", "Offlane"],
+      "damage_type": ["Physical"],
+      "skill": ["Feast", "Rage"],
+      "legis": ["Carry"]
     },
-      {
-        "id": 55,
-        "name": "Dark Seer",
-        "primary_attr": "all",
-        "attack_type": "Melee",
-        "roles": [
-          "Initiator",
-          "Escape",
-          "Disabler"
-        ],
-        "image": "/images/heroesIMG/dark_seer.png"
-      },
-      {
-        "id": 56,
-        "name": "Clinkz",
-        "primary_attr": "agi",
-        "attack_type": "Ranged",
-        "roles": [
-          "Carry",
-          "Escape",
-          "Pusher"
-        ],
-        "image": "/images/heroesIMG/clinkz.png"
-      },
-      {
-        "id": 57,
-        "name": "Omniknight",
-        "primary_attr": "str",
-        "attack_type": "Melee",
-        "roles": [
-          "Support",
-          "Durable",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/omniknight.png"
-      },
+    {
+      "id": 55,
+      "name": "Dark Seer",
+      "primary_attr": "all",
+      "attack_type": "Melee",
+      "roles": ["Initiator", "Escape", "Disabler", "Nuker", "Support"],
+      "image": "/images/heroesIMG/dark_seer.png",
+      "lane": ["Offlane", "Support"],
+      "damage_type": ["Magic"],
+      "skill": ["Vacuum", "Surge"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 56,
+      "name": "Clinkz",
+      "primary_attr": "agi",
+      "attack_type": "Ranged",
+      "roles": ["Carry", "Escape", "Pusher"],
+      "image": "/images/heroesIMG/clinkz.png",
+      "lane": ["Carry", "Offlane"],
+      "damage_type": ["Physical"],
+      "skill": ["Searing Arrows", "Skeleton Walk"],
+      "legis": ["Support"]
+    },
+    {
+      "id": 57,
+      "name": "Omniknight",
+      "primary_attr": "str",
+      "attack_type": "Melee",
+      "roles": ["Support", "Durable", "Nuker"],
+      "image": "/images/heroesIMG/omniknight.png",
+      "lane": ["Support", "Offlane"],
+      "damage_type": ["Physical"],
+      "skill": ["Repel", "Guardian Angel"],
+      "legis": ["Carry"]
+    },
       {
         "id": 58,
         "name": "Enchantress",
         "primary_attr": "int",
         "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Pusher",
-          "Durable",
-          "Disabler"
-        ],
-        "image": "/images/heroesIMG/enchantress.png"
+        "roles": ["Support", "Pusher", "Durable", "Disabler"],
+        "image": "/images/heroesIMG/enchantress.png",
+        "lane": ["Support", "Offlane"],
+        "damage_type": ["Magic"],
+        "skill": ["Enchant", "Untouchable"],
+        "legis": ["Carry"]
       },
       {
         "id": 59,
         "name": "Huskar",
         "primary_attr": "str",
         "attack_type": "Ranged",
-        "roles": [
-          "Carry",
-          "Durable",
-          "Initiator"
-        ],
-        "image": "/images/heroesIMG/huskar.png"
+        "roles": ["Carry", "Durable", "Initiator"],
+        "image": "/images/heroesIMG/huskar.png",
+        "lane": ["Mid", "Offlane", "Carry"],
+        "damage_type": ["Physical"],
+        "skill": ["Burning Spear", "Inner Vitality"],
+        "legis": ["Carry"]
       },
       {
         "id": 60,
         "name": "Night Stalker",
         "primary_attr": "str",
         "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Initiator",
-          "Durable",
-          "Disabler",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/night_stalker.png"
+        "roles": ["Carry", "Initiator", "Durable", "Disabler", "Nuker"],
+        "image": "/images/heroesIMG/night_stalker.png",
+        "lane": ["Offlane", "Support"],
+        "damage_type": ["Physical"],
+        "skill": ["Void", "Hunter in the Night"],
+        "legis": ["Carry"]
       },
       {
         "id": 61,
         "name": "Broodmother",
         "primary_attr": "all",
         "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Pusher",
-          "Escape",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/broodmother.png"
+        "roles": ["Carry", "Pusher", "Escape", "Nuker"],
+        "image": "/images/heroesIMG/broodmother.png",
+        "lane": ["Offlane", "Carry"],
+        "damage_type": ["Physical"],
+        "skill": ["Spiderlings", "Spin Web"],
+        "legis": ["Carry"]
       },
       {
         "id": 62,
         "name": "Bounty Hunter",
         "primary_attr": "agi",
         "attack_type": "Melee",
-        "roles": [
-          "Escape",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/bounty_hunter.png"
+        "roles": ["Escape", "Nuker"],
+        "image": "/images/heroesIMG/bounty_hunter.png",
+        "lane": ["Support", "Offlane"],
+        "damage_type": ["Physical"],
+        "skill": ["Shuriken Toss", "Jinada"],
+        "legis": ["Carry"]
       },
       {
         "id": 63,
         "name": "Weaver",
         "primary_attr": "agi",
         "attack_type": "Ranged",
-        "roles": [
-          "Carry",
-          "Escape"
-        ],
-        "image": "/images/heroesIMG/weaver.png"
+        "roles": ["Carry", "Escape"],
+        "image": "/images/heroesIMG/weaver.png",
+        "lane": ["Carry", "Offlane"],
+        "damage_type": ["Physical"],
+        "skill": ["Geminate Attack", "Shukuchi"],
+        "legis": ["Carry"]
       },
       {
         "id": 64,
         "name": "Jakiro",
         "primary_attr": "int",
         "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Nuker",
-          "Pusher",
-          "Disabler"
-        ],
-        "image": "/images/heroesIMG/jakiro.png"
+        "roles": ["Support", "Nuker", "Pusher", "Disabler"],
+        "image": "/images/heroesIMG/jakiro.png",
+        "lane": ["Support", "Offlane"],
+        "damage_type": ["Magic"],
+        "skill": ["Dual Breath", "Ice Path"],
+        "legis": ["Carry"]
       },
       {
         "id": 65,
         "name": "Batrider",
         "primary_attr": "all",
         "attack_type": "Ranged",
-        "roles": [
-          "Initiator",
-          "Disabler",
-          "Escape"
-        ],
-        "image": "/images/heroesIMG/batrider.png"
+        "roles": ["Initiator", "Disabler", "Escape"],
+        "image": "/images/heroesIMG/batrider.png",
+        "lane": ["Offlane", "Support"],
+        "damage_type": ["Magic"],
+        "skill": ["Flamebreak", "Sticky Napalm"],
+        "legis": ["Carry"]
       },
       {
         "id": 66,
         "name": "Chen",
         "primary_attr": "all",
         "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Pusher"
-        ],
-        "image": "/images/heroesIMG/chen.png"
+        "roles": ["Support", "Pusher"],
+        "image": "/images/heroesIMG/chen.png",
+        "lane": ["Support", "Offlane"],
+        "damage_type": ["Magic"],
+        "skill": ["Holy Persuasion", "Test of Faith"],
+        "legis": ["Carry"]
       },
       {
         "id": 67,
         "name": "Spectre",
         "primary_attr": "agi",
         "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Durable",
-          "Escape"
-        ],
-        "image": "/images/heroesIMG/spectre.png"
+        "roles": ["Carry", "Durable", "Escape"],
+        "image": "/images/heroesIMG/spectre.png",
+        "lane": ["Carry", "Mid", "Offlane"],
+        "damage_type": ["Physical"],
+        "skill": ["Spectral Dagger", "Haunt"],
+        "legis": ["Carry"]
       },
       {
         "id": 68,
         "name": "Ancient Apparition",
         "primary_attr": "int",
         "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Disabler",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/ancient_apparition.png"
-      },
+        "roles": ["Support", "Disabler", "Nuker"],
+        "image": "/images/heroesIMG/ancient_apparition.png",
+        "lane": ["Support"],
+        "damage_type": ["Magic"],
+        "skill": ["Ice Vortex", "Chilling Touch"],
+        "legis": ["Carry"]
+      }
+    ,
       {
         "id": 69,
         "name": "Doom",
         "primary_attr": "str",
         "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Disabler",
-          "Initiator",
-          "Durable",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/doom_bringer.png"
+        "roles": ["Carry", "Disabler", "Initiator", "Durable", "Nuker"],
+        "image": "/images/heroesIMG/doom_bringer.png",
+        "lane": ["Offlane", "Carry"],
+        "damage_type": ["Physical"],
+        "skill": ["Doom", "Scorched Earth"],
+        "legis": ["Carry"]
       },
       {
         "id": 70,
         "name": "Ursa",
         "primary_attr": "agi",
         "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Durable",
-          "Disabler"
-        ],
-        "image": "/images/heroesIMG/ursa.png"
+        "roles": ["Carry", "Durable", "Disabler"],
+        "image": "/images/heroesIMG/ursa.png",
+        "lane": ["Carry", "Offlane"],
+        "damage_type": ["Physical"],
+        "skill": ["Overpower", "Fury Swipes"],
+        "legis": ["Carry"]
       },
       {
         "id": 71,
         "name": "Spirit Breaker",
         "primary_attr": "str",
         "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Initiator",
-          "Disabler",
-          "Durable",
-          "Escape"
-        ],
-        "image": "/images/heroesIMG/spirit_breaker.png"
+        "roles": ["Carry", "Initiator", "Disabler", "Durable", "Escape"],
+        "image": "/images/heroesIMG/spirit_breaker.png",
+        "lane": ["Offlane", "Support"],
+        "damage_type": ["Physical"],
+        "skill": ["Charge of Darkness", "Nether Strike"],
+        "legis": ["Carry"]
       },
       {
         "id": 72,
         "name": "Gyrocopter",
         "primary_attr": "agi",
         "attack_type": "Ranged",
-        "roles": [
-          "Carry",
-          "Nuker",
-          "Disabler"
-        ],
-        "image": "/images/heroesIMG/gyrocopter.png"
+        "roles": ["Carry", "Nuker", "Disabler"],
+        "image": "/images/heroesIMG/gyrocopter.png",
+        "lane": ["Carry"],
+        "damage_type": ["Magic"],
+        "skill": ["Rocket Barrage", "Flak Cannon"],
+        "legis": ["Carry"]
       },
       {
         "id": 73,
         "name": "Alchemist",
         "primary_attr": "str",
         "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Support",
-          "Durable",
-          "Disabler",
-          "Initiator",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/alchemist.png"
+        "roles": ["Carry", "Durable", "Disabler", "Initiator", "Nuker"],
+        "image": "/images/heroesIMG/alchemist.png",
+        "lane": ["Carry", "Offlane"],
+        "damage_type": ["Physical"],
+        "skill": ["Acid Spray", "Unstable Concoction"],
+        "legis": ["Carry"]
       },
       {
         "id": 74,
         "name": "Invoker",
         "primary_attr": "all",
         "attack_type": "Ranged",
-        "roles": [
-          "Carry",
-          "Nuker",
-          "Disabler",
-          "Escape",
-          "Pusher"
-        ],
-        "image": "/images/heroesIMG/invoker.png"
+        "roles": ["Carry", "Nuker", "Disabler", "Escape", "Pusher"],
+        "image": "/images/heroesIMG/invoker.png",
+        "lane": ["Mid"],
+        "damage_type": ["Magic"],
+        "skill": ["Invoke", "Sunstrike"],
+        "legis": ["Carry"]
       },
       {
         "id": 75,
         "name": "Silencer",
         "primary_attr": "int",
         "attack_type": "Ranged",
-        "roles": [
-          "Carry",
-          "Support",
-          "Disabler",
-          "Initiator",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/silencer.png"
+        "roles": ["Support", "Disabler", "Initiator", "Nuker"],
+        "image": "/images/heroesIMG/silencer.png",
+        "lane": ["Support", "Mid"],
+        "damage_type": ["Magic"],
+        "skill": ["Global Silence", "Last Word"],
+        "legis": ["Carry"]
       },
       {
         "id": 76,
         "name": "Outworld Destroyer",
         "primary_attr": "int",
         "attack_type": "Ranged",
-        "roles": [
-          "Carry",
-          "Nuker",
-          "Disabler"
-        ],
-        "image": "/images/heroesIMG/obsidian_destroyer.png"
+        "roles": ["Carry", "Nuker", "Disabler"],
+        "image": "/images/heroesIMG/obsidian_destroyer.png",
+        "lane": ["Mid"],
+        "damage_type": ["Magic"],
+        "skill": ["Arcane Orb", "Astral Imprisonment"],
+        "legis": ["Carry"]
       },
       {
         "id": 77,
         "name": "Lycan",
         "primary_attr": "all",
         "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Pusher",
-          "Durable",
-          "Escape"
-        ],
-        "image": "/images/heroesIMG/lycan.png"
+        "roles": ["Carry", "Pusher", "Durable", "Escape"],
+        "image": "/images/heroesIMG/lycan.png",
+        "lane": ["Carry", "Offlane"],
+        "damage_type": ["Physical"],
+        "skill": ["Summon Wolves", "Shapeshift"],
+        "legis": ["Carry"]
       },
       {
         "id": 78,
         "name": "Brewmaster",
         "primary_attr": "all",
         "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Initiator",
-          "Durable",
-          "Disabler",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/brewmaster.png"
+        "roles": ["Carry", "Initiator", "Durable", "Disabler", "Nuker"],
+        "image": "/images/heroesIMG/brewmaster.png",
+        "lane": ["Offlane", "Carry"],
+        "damage_type": ["Physical"],
+        "skill": ["Drunken Brawler", "Primal Split"],
+        "legis": ["Carry"]
       },
       {
         "id": 79,
         "name": "Shadow Demon",
         "primary_attr": "int",
         "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Disabler",
-          "Initiator",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/shadow_demon.png"
-      },
+        "roles": ["Support", "Disabler", "Initiator", "Nuker"],
+        "image": "/images/heroesIMG/shadow_demon.png",
+        "lane": ["Support", "Mid"],
+        "damage_type": ["Magic"],
+        "skill": ["Shadow Poison", "Disruption"],
+        "legis": ["Carry"]
+      }
+    ,
       {
         "id": 80,
         "name": "Lone Druid",
-        "primary_attr": "all",
+        "primary_attr": "agi",
         "attack_type": "Ranged",
-        "roles": [
-          "Carry",
-          "Pusher",
-          "Durable"
-        ],
-        "image": "/images/heroesIMG/lone_druid.png"
+        "roles": ["Carry", "Pusher", "Durable"],
+        "image": "/images/heroesIMG/lone_druid.png",
+        "lane": ["Carry", "Offlane"],
+        "damage_type": ["Physical"],
+        "skill": ["Summon", "Durable"],
+        "legis": ["Primary Support"]
       },
       {
         "id": 81,
         "name": "Chaos Knight",
         "primary_attr": "str",
         "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Disabler",
-          "Durable",
-          "Pusher",
-          "Initiator"
-        ],
-        "image": "/images/heroesIMG/chaos_knight.png"
+        "roles": ["Carry", "Disabler", "Durable", "Pusher", "Initiator"],
+        "image": "/images/heroesIMG/chaos_knight.png",
+        "lane": ["Carry", "Offlane"],
+        "damage_type": ["Physical", "Pure"],
+        "skill": ["Stun", "Durable", "AoE"],
+        "legis": ["Primary Support"]
       },
       {
         "id": 82,
         "name": "Meepo",
         "primary_attr": "agi",
         "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Escape",
-          "Nuker",
-          "Disabler",
-          "Initiator",
-          "Pusher"
-        ],
-        "image": "/images/heroesIMG/meepo.png"
+        "roles": ["Carry", "Escape", "Nuker", "Disabler", "Initiator", "Pusher"],
+        "image": "/images/heroesIMG/meepo.png",
+        "lane": ["Carry", "Mid"],
+        "damage_type": ["Physical", "Magic"],
+        "skill": ["Summon", "Disabler", "Nuker"],
+        "legis": ["Primary Support"]
       },
       {
         "id": 83,
         "name": "Treant Protector",
         "primary_attr": "str",
         "attack_type": "Melee",
-        "roles": [
-          "Support",
-          "Initiator",
-          "Durable",
-          "Disabler",
-          "Escape"
-        ],
-        "image": "/images/heroesIMG/treant.png"
+        "roles": ["Support", "Initiator", "Durable", "Disabler", "Escape"],
+        "image": "/images/heroesIMG/treant.png",
+        "lane": ["Primary Support", "Offlane"],
+        "damage_type": ["Physical", "Magic"],
+        "skill": ["Armor", "Durable", "Disabler"],
+        "legis": ["Carry"]
       },
       {
         "id": 84,
         "name": "Ogre Magi",
         "primary_attr": "str",
         "attack_type": "Melee",
-        "roles": [
-          "Support",
-          "Nuker",
-          "Disabler",
-          "Durable",
-          "Initiator"
-        ],
-        "image": "/images/heroesIMG/ogre_magi.png"
+        "roles": ["Support", "Nuker", "Disabler", "Durable", "Initiator"],
+        "image": "/images/heroesIMG/ogre_magi.png",
+        "lane": ["Primary Support", "Secondary Support"],
+        "damage_type": ["Magic"],
+        "skill": ["Nuker", "Disabler", "Durable"],
+        "legis": ["Carry"]
       },
       {
         "id": 85,
         "name": "Undying",
         "primary_attr": "str",
         "attack_type": "Melee",
-        "roles": [
-          "Support",
-          "Durable",
-          "Disabler",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/undying.png"
-      },
-      {
-        "id": 86,
-        "name": "Rubick",
-        "primary_attr": "int",
-        "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Disabler",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/rubick.png"
-      },
-      {
-        "id": 87,
-        "name": "Disruptor",
-        "primary_attr": "int",
-        "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Disabler",
-          "Nuker",
-          "Initiator"
-        ],
-        "image": "/images/heroesIMG/disruptor.png"
-      },
-      {
-        "id": 88,
-        "name": "Nyx Assassin",
-        "primary_attr": "all",
-        "attack_type": "Melee",
-        "roles": [
-          "Disabler",
-          "Nuker",
-          "Initiator",
-          "Escape"
-        ],
-        "image": "/images/heroesIMG/nyx_assassin.png"
-      },
-      {
-        "id": 89,
-        "name": "Naga Siren",
-        "primary_attr": "agi",
-        "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Support",
-          "Pusher",
-          "Disabler",
-          "Initiator",
-          "Escape"
-        ],
-        "image": "/images/heroesIMG/naga_siren.png"
-      },
-      {
-        "id": 90,
-        "name": "Keeper of the Light",
-        "primary_attr": "int",
-        "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Nuker",
-          "Disabler"
-        ],
-        "image": "/images/heroesIMG/keeper_of_the_light.png"
-      },
-      {
-        "id": 91,
-        "name": "Io",
-        "primary_attr": "all",
-        "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Escape",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/wisp.png"
-      },
-      {
-        "id": 92,
-        "name": "Visage",
-        "primary_attr": "all",
-        "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Nuker",
-          "Durable",
-          "Disabler",
-          "Pusher"
-        ],
-        "image": "/images/heroesIMG/visage.png"
-      },
-      {
-        "id": 93,
-        "name": "Slark",
-        "primary_attr": "agi",
-        "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Escape",
-          "Disabler",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/slark.png"
-      },
-      {
-        "id": 94,
-        "name": "Medusa",
-        "primary_attr": "agi",
-        "attack_type": "Ranged",
-        "roles": [
-          "Carry",
-          "Disabler",
-          "Durable"
-        ],
-        "image": "/images/heroesIMG/medusa.png"
-      },
-      {
-        "id": 95,
-        "name": "Troll Warlord",
-        "primary_attr": "agi",
-        "attack_type": "Ranged",
-        "roles": [
-          "Carry",
-          "Pusher",
-          "Disabler",
-          "Durable"
-        ],
-        "image": "/images/heroesIMG/troll_warlord.png"
-      },
-      {
-        "id": 96,
-        "name": "Centaur Warrunner",
-        "primary_attr": "str",
-        "attack_type": "Melee",
-        "roles": [
-          "Durable",
-          "Initiator",
-          "Disabler",
-          "Nuker",
-          "Escape"
-        ],
-        "image": "/images/heroesIMG/centaur.png"
-      },
-      {
-        "id": 97,
-        "name": "Magnus",
-        "primary_attr": "all",
-        "attack_type": "Melee",
-        "roles": [
-          "Initiator",
-          "Disabler",
-          "Nuker",
-          "Escape"
-        ],
-        "image": "/images/heroesIMG/magnataur.png"
-      },
-      {
-        "id": 98,
-        "name": "Timbersaw",
-        "primary_attr": "str",
-        "attack_type": "Melee",
-        "roles": [
-          "Nuker",
-          "Durable",
-          "Escape"
-        ],
-        "image": "/images/heroesIMG/shredder.png"
-      },
-      {
-        "id": 99,
-        "name": "Bristleback",
-        "primary_attr": "str",
-        "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Durable",
-          "Initiator",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/bristleback.png"
-      },
-      {
-        "id": 100,
-        "name": "Tusk",
-        "primary_attr": "str",
-        "attack_type": "Melee",
-        "roles": [
-          "Initiator",
-          "Disabler",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/tusk.png"
-      },
-      {
-        "id": 101,
-        "name": "Skywrath Mage",
-        "primary_attr": "int",
-        "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Nuker",
-          "Disabler"
-        ],
-        "image": "/images/heroesIMG/skywrath_mage.png"
-      },
-      {
-        "id": 102,
-        "name": "Abaddon",
-        "primary_attr": "all",
-        "attack_type": "Melee",
-        "roles": [
-          "Support",
-          "Carry",
-          "Durable"
-        ],
-        "image": "/images/heroesIMG/abaddon.png"
-      },
-      {
-        "id": 103,
-        "name": "Elder Titan",
-        "primary_attr": "str",
-        "attack_type": "Melee",
-        "roles": [
-          "Initiator",
-          "Disabler",
-          "Nuker",
-          "Durable"
-        ],
-        "image": "/images/heroesIMG/elder_titan.png"
-      },
-      {
-        "id": 104,
-        "name": "Legion Commander",
-        "primary_attr": "str",
-        "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Disabler",
-          "Initiator",
-          "Durable",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/legion_commander.png"
-      },
-      {
-        "id": 105,
-        "name": "Techies",
-        "primary_attr": "all",
-        "attack_type": "Ranged",
-        "roles": [
-          "Nuker",
-          "Disabler"
-        ],
-        "image": "/images/heroesIMG/techies.png"
-      },
-      {
-        "id": 106,
-        "name": "Ember Spirit",
-        "primary_attr": "agi",
-        "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Escape",
-          "Nuker",
-          "Disabler",
-          "Initiator"
-        ],
-        "image": "/images/heroesIMG/ember_spirit.png"
-      },
-      {
-        "id": 107,
-        "name": "Earth Spirit",
-        "primary_attr": "str",
-        "attack_type": "Melee",
-        "roles": [
-          "Nuker",
-          "Escape",
-          "Disabler",
-          "Initiator",
-          "Durable"
-        ],
-        "image": "/images/heroesIMG/earth_spirit.png"
-      },
-      {
-        "id": 108,
-        "name": "Underlord",
-        "primary_attr": "str",
-        "attack_type": "Melee",
-        "roles": [
-          "Support",
-          "Nuker",
-          "Disabler",
-          "Durable",
-          "Escape"
-        ],
-        "image": "/images/heroesIMG/abyssal_underlord.png"
-      },
-      {
-        "id": 109,
-        "name": "Terrorblade",
-        "primary_attr": "agi",
-        "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Pusher",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/terrorblade.png"
-      },
-      {
-        "id": 110,
-        "name": "Phoenix",
-        "primary_attr": "all",
-        "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Nuker",
-          "Initiator",
-          "Escape",
-          "Disabler"
-        ],
-        "image": "/images/heroesIMG/phoenix.png"
-      },
-      {
-        "id": 111,
-        "name": "Oracle",
-        "primary_attr": "int",
-        "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Nuker",
-          "Disabler",
-          "Escape"
-        ],
-        "image": "/images/heroesIMG/oracle.png"
-      },
-      {
-        "id": 112,
-        "name": "Winter Wyvern",
-        "primary_attr": "all",
-        "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Disabler",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/winter_wyvern.png"
-      },
-      {
-        "id": 113,
-        "name": "Arc Warden",
-        "primary_attr": "agi",
-        "attack_type": "Ranged",
-        "roles": [
-          "Carry",
-          "Escape",
-          "Nuker"
-        ],
-        "image": "/images/heroesIMG/arc_warden.png"
-      },
-      {
-        "id": 114,
-        "name": "Monkey King",
-        "primary_attr": "agi",
-        "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Escape",
-          "Disabler",
-          "Initiator"
-        ],
-        "image": "/images/heroesIMG/monkey_king.png"
-      },
-      {
-        "id": 119,
-        "name": "Dark Willow",
-        "primary_attr": "all",
-        "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Nuker",
-          "Disabler",
-          "Escape"
-        ],
-        "image": "/images/heroesIMG/dark_willow.png"
-      },
-      {
-        "id": 120,
-        "name": "Pangolier",
-        "primary_attr": "all",
-        "attack_type": "Melee",
-        "roles": [
-          "Nuker",
-          "Disabler",
-          "Durable",
-          "Escape",
-          "Initiator"
-        ],
-        "image": "/images/heroesIMG/pangolier.png"
-      },
-      {
-        "id": 121,
-        "name": "Grimstroke",
-        "primary_attr": "int",
-        "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Nuker",
-          "Disabler",
-          "Escape"
-        ],
-        "image": "/images/heroesIMG/grimstroke.png"
-      },
-      {
-        "id": 123,
-        "name": "Hoodwink",
-        "primary_attr": "agi",
-        "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Nuker",
-          "Escape",
-          "Disabler"
-        ],
-        "image": "/images/heroesIMG/hoodwink.png"
-      },
-      {
-        "id": 126,
-        "name": "Void Spirit",
-        "primary_attr": "all",
-        "attack_type": "Melee",
-        "roles": [
-          "Carry",
-          "Escape",
-          "Nuker",
-          "Disabler"
-        ],
-        "image": "/images/heroesIMG/void_spirit.png"
-      },
-      {
-        "id": 128,
-        "name": "Snapfire",
-        "primary_attr": "all",
-        "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Nuker",
-          "Disabler",
-          "Escape"
-        ],
-        "image": "/images/heroesIMG/snapfire.png"
-      },
-      {
-        "id": 129,
-        "name": "Mars",
-        "primary_attr": "str",
-        "attack_type": "Melee",
-        "roles": [
-          "Nuker",
-          "Initiator",
-          "Disabler",
-          "Durable"
-        ],
-        "image": "/images/heroesIMG/mars.png"
-      },
-      {
-        "id": 131,
-        "name": "Ringmaster",
-        "primary_attr": "int",
-        "attack_type": "Ranged",
-        "roles": [
-          "Support",
-          "Nuker",
-          "Escape",
-          "Disabler"
-        ],
-        "image": "/images/heroesIMG/Ringmaster.png"
-      },
-      {
-        "id": 135,
-        "name": "Dawnbreaker",
-        "primary_attr": "str",
-        "attack_type": "Melee",
-        "roles": [
-          "Nuker",
-          "Durable"
-        ],
-        "image": "/images/heroesIMG/dawnbreaker.png"
-      },
-      {
-        "id": 136,
-        "name": "Marci",
-        "primary_attr": "all",
-        "attack_type": "Melee",
-        "roles": [
-          "Support",
-          "Initiator",
-          "Disabler",
-          "Escape"
-        ],
-        "image": "/images/heroesIMG/marci.png"
-      },
-      {
-        "id": 137,
-        "name": "Primal Beast",
-        "primary_attr": "str",
-        "attack_type": "Melee",
-        "roles": [
-          "Initiator",
-          "Durable",
-          "Disabler"
-        ],
-        "image": "/images/heroesIMG/primal_beast.png"
-      },
-      {
-        "id": 138,
-        "name": "Muerta",
-        "primary_attr": "int",
-        "attack_type": "Ranged",
-        "roles": [
-          "Carry",
-          "Nuker",
-          "Disabler"
-        ],
-        "image": "/images/heroesIMG/muerta.png"
+        "roles": ["Support", "Durable", "Disabler", "Nuker"],
+        "image": "/images/heroesIMG/undying.png",
+        "lane": ["Primary Support", "Offlane"],
+        "damage_type": ["Magic", "Physical"],
+        "skill": ["Durable", "Disabler", "AoE"],
+        "legis": ["Carry"]
       }
-    ]
+    ,
+    {
+      "id": 86,
+      "name": "Rubick",
+      "primary_attr": "int",
+      "attack_type": "Ranged",
+      "roles": ["Support", "Disabler", "Nuker"],
+      "image": "/images/heroesIMG/rubick.png",
+      "lane": ["Primary Support", "Mid"],
+      "damage_type": ["Magic"],
+      "skill": ["Disabler", "Nuker", "Teleportation"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 87,
+      "name": "Disruptor",
+      "primary_attr": "int",
+      "attack_type": "Ranged",
+      "roles": ["Support", "Disabler", "Nuker", "Initiator"],
+      "image": "/images/heroesIMG/disruptor.png",
+      "lane": ["Primary Support", "Offlane"],
+      "damage_type": ["Magic"],
+      "skill": ["Disabler", "Nuker", "Initiator"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 88,
+      "name": "Nyx Assassin",
+      "primary_attr": "agi",
+      "attack_type": "Melee",
+      "roles": ["Disabler", "Nuker", "Initiator", "Escape"],
+      "image": "/images/heroesIMG/nyx_assassin.png",
+      "lane": ["Offlane", "Mid"],
+      "damage_type": ["Physical", "Magic"],
+      "skill": ["Disabler", "Nuker", "Escape", "Invisibility"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 89,
+      "name": "Naga Siren",
+      "primary_attr": "agi",
+      "attack_type": "Melee",
+      "roles": ["Carry", "Support", "Pusher", "Disabler", "Initiator", "Escape"],
+      "image": "/images/heroesIMG/naga_siren.png",
+      "lane": ["Carry", "Offlane"],
+      "damage_type": ["Physical", "Magic"],
+      "skill": ["Disabler", "Nuker", "Escape", "AoE"],
+      "legis": ["Primary Support"]
+    },
+    {
+      "id": 90,
+      "name": "Keeper of the Light",
+      "primary_attr": "int",
+      "attack_type": "Ranged",
+      "roles": ["Support", "Nuker", "Disabler"],
+      "image": "/images/heroesIMG/keeper_of_the_light.png",
+      "lane": ["Primary Support"],
+      "damage_type": ["Magic"],
+      "skill": ["Nuker", "Disabler", "Mana"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 91,
+      "name": "Io",
+      "primary_attr": "all",
+      "attack_type": "Ranged",
+      "roles": ["Support", "Escape", "Nuker"],
+      "image": "/images/heroesIMG/wisp.png",
+      "lane": ["Primary Support", "Mid"],
+      "damage_type": ["Magic"],
+      "skill": ["Support", "Escape", "Nuker"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 92,
+      "name": "Visage",
+      "primary_attr": "all",
+      "attack_type": "Ranged",
+      "roles": ["Support", "Nuker", "Durable", "Disabler", "Pusher"],
+      "image": "/images/heroesIMG/visage.png",
+      "lane": ["Offlane", "Secondary Support"],
+      "damage_type": ["Magic", "Physical"],
+      "skill": ["Nuker", "Disabler", "Durable", "AoE"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 93,
+      "name": "Slark",
+      "primary_attr": "agi",
+      "attack_type": "Melee",
+      "roles": ["Carry", "Escape", "Disabler", "Nuker"],
+      "image": "/images/heroesIMG/slark.png",
+      "lane": ["Carry", "Mid"],
+      "damage_type": ["Physical"],
+      "skill": ["Escape", "Disabler", "Nuker", "Invisibility"],
+      "legis": ["Primary Support"]
+    },
+    {
+      "id": 94,
+      "name": "Medusa",
+      "primary_attr": "agi",
+      "attack_type": "Ranged",
+      "roles": ["Carry", "Disabler", "Durable"],
+      "image": "/images/heroesIMG/medusa.png",
+      "lane": ["Carry"],
+      "damage_type": ["Magic", "Physical"],
+      "skill": ["Disabler", "Durable", "AoE"],
+      "legis": ["Secondary Support"]
+    },
+    {
+      "id": 95,
+      "name": "Troll Warlord",
+      "primary_attr": "agi",
+      "attack_type": "Ranged",
+      "roles": ["Carry", "Pusher", "Disabler", "Durable"],
+      "image": "/images/heroesIMG/troll_warlord.png",
+      "lane": ["Carry", "Offlane"],
+      "damage_type": ["Physical"],
+      "skill": ["Pusher", "Disabler", "Durable"],
+      "legis": ["Primary Support"]
+    },
+    {
+      "id": 96,
+      "name": "Centaur Warrunner",
+      "primary_attr": "str",
+      "attack_type": "Melee",
+      "roles": ["Durable", "Initiator", "Disabler", "Nuker", "Escape"],
+      "image": "/images/heroesIMG/centaur.png",
+      "lane": ["Offlane"],
+      "damage_type": ["Physical"],
+      "skill": ["Durable", "Initiator", "Disabler"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 97,
+      "name": "Magnus",
+      "primary_attr": "all",
+      "attack_type": "Melee",
+      "roles": ["Initiator", "Disabler", "Nuker", "Escape"],
+      "image": "/images/heroesIMG/magnataur.png",
+      "lane": ["Offlane"],
+      "damage_type": ["Physical"],
+      "skill": ["Initiator", "Disabler", "Nuker"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 98,
+      "name": "Timbersaw",
+      "primary_attr": "str",
+      "attack_type": "Melee",
+      "roles": ["Nuker", "Durable", "Escape"],
+      "image": "/images/heroesIMG/shredder.png",
+      "lane": ["Offlane"],
+      "damage_type": ["Physical", "Magic"],
+      "skill": ["Nuker", "Durable", "Escape"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 99,
+      "name": "Bristleback",
+      "primary_attr": "str",
+      "attack_type": "Melee",
+      "roles": ["Carry", "Durable", "Initiator", "Nuker"],
+      "image": "/images/heroesIMG/bristleback.png",
+      "lane": ["Carry", "Offlane"],
+      "damage_type": ["Physical"],
+      "skill": ["Carry", "Durable", "Nuker"],
+      "legis": ["Primary Support"]
+    },
+    {
+      "id": 100,
+      "name": "Tusk",
+      "primary_attr": "str",
+      "attack_type": "Melee",
+      "roles": ["Initiator", "Disabler", "Nuker"],
+      "image": "/images/heroesIMG/tusk.png",
+      "lane": ["Offlane", "Secondary Support"],
+      "damage_type": ["Physical"],
+      "skill": ["Initiator", "Disabler", "Nuker"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 101,
+      "name": "Skywrath Mage",
+      "primary_attr": "int",
+      "attack_type": "Ranged",
+      "roles": ["Support", "Nuker", "Disabler"],
+      "image": "/images/heroesIMG/skywrath_mage.png",
+      "lane": ["Primary Support"],
+      "damage_type": ["Magic"],
+      "skill": ["Support", "Nuker"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 102,
+      "name": "Abaddon",
+      "primary_attr": "all",
+      "attack_type": "Melee",
+      "roles": ["Support", "Carry", "Durable"],
+      "image": "/images/heroesIMG/abaddon.png",
+      "lane": ["Offlane", "Carry"],
+      "damage_type": ["Physical"],
+      "skill": ["Support", "Carry", "Durable"],
+      "legis": ["Primary Support"]
+    },
+    {
+      "id": 103,
+      "name": "Elder Titan",
+      "primary_attr": "str",
+      "attack_type": "Melee",
+      "roles": ["Initiator", "Disabler", "Nuker", "Durable"],
+      "image": "/images/heroesIMG/elder_titan.png",
+      "lane": ["Offlane"],
+      "damage_type": ["Physical"],
+      "skill": ["Initiator", "Disabler", "Durable"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 104,
+      "name": "Legion Commander",
+      "primary_attr": "str",
+      "attack_type": "Melee",
+      "roles": ["Carry", "Disabler", "Initiator", "Durable", "Nuker"],
+      "image": "/images/heroesIMG/legion_commander.png",
+      "lane": ["Carry", "Offlane"],
+      "damage_type": ["Physical"],
+      "skill": ["Carry", "Disabler", "Initiator"],
+      "legis": ["Primary Support"]
+    },
+    {
+      "id": 105,
+      "name": "Techies",
+      "primary_attr": "all",
+      "attack_type": "Ranged",
+      "roles": ["Nuker", "Disabler"],
+      "image": "/images/heroesIMG/techies.png",
+      "lane": ["Secondary Support"],
+      "damage_type": ["Magic"],
+      "skill": ["Nuker", "Disabler"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 106,
+      "name": "Ember Spirit",
+      "primary_attr": "agi",
+      "attack_type": "Melee",
+      "roles": ["Carry", "Escape", "Nuker", "Disabler", "Initiator"],
+      "image": "/images/heroesIMG/ember_spirit.png",
+      "lane": ["Mid", "Offlane"],
+      "damage_type": ["Magic", "Physical"],
+      "skill": ["Carry", "Escape", "Nuker"],
+      "legis": ["Primary Support"]
+    },
+    {
+      "id": 107,
+      "name": "Earth Spirit",
+      "primary_attr": "str",
+      "attack_type": "Melee",
+      "roles": ["Nuker", "Escape", "Disabler", "Initiator", "Durable"],
+      "image": "/images/heroesIMG/earth_spirit.png",
+      "lane": ["Offlane", "Primary Support"],
+      "damage_type": ["Physical", "Magic"],
+      "skill": ["Nuker", "Disabler", "Initiator"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 108,
+      "name": "Underlord",
+      "primary_attr": "str",
+      "attack_type": "Melee",
+      "roles": ["Support", "Nuker", "Disabler", "Durable", "Escape"],
+      "image": "/images/heroesIMG/abyssal_underlord.png",
+      "lane": ["Offlane", "Primary Support"],
+      "damage_type": ["Magic"],
+      "skill": ["Support", "Durable"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 109,
+      "name": "Terrorblade",
+      "primary_attr": "agi",
+      "attack_type": "Melee",
+      "roles": ["Carry", "Pusher", "Nuker"],
+      "image": "/images/heroesIMG/terrorblade.png",
+      "lane": ["Carry"],
+      "damage_type": ["Physical"],
+      "skill": ["Carry", "Pusher"],
+      "legis": ["Primary Support"]
+    },
+    {
+      "id": 110,
+      "name": "Phoenix",
+      "primary_attr": "all",
+      "attack_type": "Ranged",
+      "roles": ["Support", "Nuker", "Initiator", "Escape", "Disabler"],
+      "image": "/images/heroesIMG/phoenix.png",
+      "lane": ["Primary Support", "Offlane"],
+      "damage_type": ["Magic"],
+      "skill": ["Support", "Nuker", "Initiator"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 111,
+      "name": "Oracle",
+      "primary_attr": "int",
+      "attack_type": "Ranged",
+      "roles": ["Support", "Nuker", "Disabler", "Escape"],
+      "image": "/images/heroesIMG/oracle.png",
+      "lane": ["Primary Support"],
+      "damage_type": ["Magic"],
+      "skill": ["Support", "Nuker"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 112,
+      "name": "Winter Wyvern",
+      "primary_attr": "all",
+      "attack_type": "Ranged",
+      "roles": ["Support", "Disabler", "Nuker"],
+      "image": "/images/heroesIMG/winter_wyvern.png",
+      "lane": ["Primary Support"],
+      "damage_type": ["Magic"],
+      "skill": ["Support", "Disabler"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 113,
+      "name": "Arc Warden",
+      "primary_attr": "agi",
+      "attack_type": "Ranged",
+      "roles": ["Carry", "Escape", "Nuker"],
+      "image": "/images/heroesIMG/arc_warden.png",
+      "lane": ["Carry"],
+      "damage_type": ["Physical", "Magic"],
+      "skill": ["Carry", "Nuker"],
+      "legis": ["Primary Support"]
+    },
+    {
+      "id": 114,
+      "name": "Monkey King",
+      "primary_attr": "agi",
+      "attack_type": "Melee",
+      "roles": ["Carry", "Escape", "Disabler", "Initiator"],
+      "image": "/images/heroesIMG/monkey_king.png",
+      "lane": ["Carry", "Offlane"],
+      "damage_type": ["Physical"],
+      "skill": ["Carry", "Disabler"],
+      "legis": ["Primary Support"]
+    },
+    {
+      "id": 119,
+      "name": "Dark Willow",
+      "primary_attr": "all",
+      "attack_type": "Ranged",
+      "roles": ["Support", "Nuker", "Disabler", "Escape"],
+      "image": "/images/heroesIMG/dark_willow.png",
+      "lane": ["Primary Support"],
+      "damage_type": ["Magic"],
+      "skill": ["Support", "Disabler"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 120,
+      "name": "Pangolier",
+      "primary_attr": "all",
+      "attack_type": "Melee",
+      "roles": ["Nuker", "Disabler", "Durable", "Escape", "Initiator"],
+      "image": "/images/heroesIMG/pangolier.png",
+      "lane": ["Offlane", "Secondary Support"],
+      "damage_type": ["Physical"],
+      "skill": ["Nuker", "Disabler"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 121,
+      "name": "Grimstroke",
+      "primary_attr": "int",
+      "attack_type": "Ranged",
+      "roles": ["Support", "Nuker", "Disabler", "Escape"],
+      "image": "/images/heroesIMG/grimstroke.png",
+      "lane": ["Primary Support"],
+      "damage_type": ["Magic"],
+      "skill": ["Support", "Nuker"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 123,
+      "name": "Hoodwink",
+      "primary_attr": "agi",
+      "attack_type": "Ranged",
+      "roles": ["Support", "Nuker", "Escape", "Disabler"],
+      "image": "/images/heroesIMG/hoodwink.png",
+      "lane": ["Primary Support", "Offlane"],
+      "damage_type": ["Physical", "Magic"],
+      "skill": ["Support", "Disabler"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 126,
+      "name": "Void Spirit",
+      "primary_attr": "all",
+      "attack_type": "Melee",
+      "roles": ["Carry", "Escape", "Nuker", "Disabler"],
+      "image": "/images/heroesIMG/void_spirit.png",
+      "lane": ["Mid", "Offlane"],
+      "damage_type": ["Magic"],
+      "skill": ["Nuker", "Escape"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 128,
+      "name": "Snapfire",
+      "primary_attr": "all",
+      "attack_type": "Ranged",
+      "roles": ["Support", "Nuker", "Disabler", "Escape"],
+      "image": "/images/heroesIMG/snapfire.png",
+      "lane": ["Primary Support", "Offlane"],
+      "damage_type": ["Magic"],
+      "skill": ["Support", "Nuker"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 129,
+      "name": "Mars",
+      "primary_attr": "str",
+      "attack_type": "Melee",
+      "roles": ["Nuker", "Initiator", "Disabler", "Durable"],
+      "image": "/images/heroesIMG/mars.png",
+      "lane": ["Offlane"],
+      "damage_type": ["Physical"],
+      "skill": ["Initiator", "Durable"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 135,
+      "name": "Dawnbreaker",
+      "primary_attr": "str",
+      "attack_type": "Melee",
+      "roles": ["Nuker", "Durable"],
+      "image": "/images/heroesIMG/dawnbreaker.png",
+      "lane": ["Offlane"],
+      "damage_type": ["Physical"],
+      "skill": ["Durable", "Nuker"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 136,
+      "name": "Marci",
+      "primary_attr": "all",
+      "attack_type": "Melee",
+      "roles": ["Support", "Carry", "Initiator", "Disabler", "Escape"],
+      "image": "/images/heroesIMG/marci.png",
+      "lane": ["Offlane", "Carry"],
+      "damage_type": ["Physical", "Magic"],
+      "skill": ["Initiator", "Disabler"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 137,
+      "name": "Primal Beast",
+      "primary_attr": "str",
+      "attack_type": "Melee",
+      "roles": ["Initiator", "Durable", "Disabler"],
+      "image": "/images/heroesIMG/primal_beast.png",
+      "lane": ["Offlane"],
+      "damage_type": ["Physical"],
+      "skill": ["Durable", "Initiator"],
+      "legis": ["Carry"]
+    },
+    {
+      "id": 138,
+      "name": "Muerta",
+      "primary_attr": "int",
+      "attack_type": "Ranged",
+      "roles": ["Carry", "Nuker", "Disabler"],
+      "image": "/images/heroesIMG/muerta.png",
+      "lane": ["Carry"],
+      "damage_type": ["Magic"],
+      "skill": ["Nuker", "Disabler"],
+      "legis": ["Carry"]
+    }
+  ]
 
 

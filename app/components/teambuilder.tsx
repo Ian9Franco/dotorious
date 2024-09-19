@@ -1,46 +1,57 @@
-import React from 'react'
-import Image from 'next/image'
-import { Hero } from '../data/heroesData'
-import { assignLine } from '../data/heroUtils'
+import React from 'react';
+import Image from 'next/image';
+import { Hero } from '../data/heroesData';
 
 interface TeamBuilderProps {
-  team: Hero[]
+  team: Hero[];
+  onHeroChange: (roleIndex: number) => void;
+  teamLogic: "lane" | "legis";
 }
 
-const TeamBuilder: React.FC<TeamBuilderProps> = ({ team }) => {
-  const lineOrder = ["Hard Carry", "Mid", "Offlane", "Secondary Support", "Primary Support"];
-
-  const sortedTeam = [...team].sort((a, b) => 
-    lineOrder.indexOf(assignLine(a)) - lineOrder.indexOf(assignLine(b))
-  );
+const TeamBuilder: React.FC<TeamBuilderProps> = ({ team, onHeroChange, teamLogic }) => {
+  const roles = ['Carry', 'Mid', 'Offlane', 'Secondary', 'Primary'];
 
   return (
-    <div className="team-display flex flex-wrap justify-between items-end w-full">
-      {sortedTeam.map((hero, index) => (
-        <div key={hero.id} className={`hero text-center flex-1 min-w-[120px] max-w-[180px] px-2 mb-4 opacity-0 animate-fade-in`} style={{animationDelay: `${index * 100}ms`}}>
-          <div className="relative w-full pb-[150%] mb-2">
+    <div className="team-display w-full flex flex-col items-center justify-center">
+  <div className="roles-display grid grid-cols-5 gap-4 mb-4 w-full">
+    {team.map((hero, index) => (
+      <div 
+        key={hero?.id || index}
+        className="hero-container flex flex-col items-center"
+        onDoubleClick={() => onHeroChange(index)}
+        onTouchStart={(e) => {
+          if (e.touches.length === 2) {
+            e.preventDefault();
+            onHeroChange(index);
+          }
+        }}
+      >
+        {/* Lane Name */}
+        <p className="text-lg text-zinc-200 font-bold mb-2">{roles[index]}</p>
+
+        {/* Hero Image */}
+        <div className="relative w-32 h-32 mb-1"> {/* Fixed size for uniformity */}
+          {hero ? (
             <Image
               src={hero.image}
               alt={hero.name}
               layout="fill"
               objectFit="cover"
-              className="rounded-lg border-2 border-zinc-700 transition-all duration-300 hover:scale-105 hover:border-zinc-500"
+              className="rounded-lg border-2 border-zinc-700 transition-all duration-300 hover:border-zinc-500"
             />
-          </div>
-          <p className="text-sm text-zinc-300 font-medium truncate">{hero.name}</p>
-          <p className="text-xs text-zinc-400 leading-tight">
-            <span className="block">{assignLine(hero).split(' ')[0]}</span>
-            <span className="block">{assignLine(hero).split(' ')[1]}</span>
-          </p>
-          {/* {{hero.winRate !== undefined && (
-            <p className="text-xs text-zinc-500">Win Rate: {(hero.winRate * 100).toFixed(2)}%</p>
-          )}} */}
+          ) : (
+            <div className="w-full h-full bg-zinc-800 rounded-lg"></div>
+          )}
         </div>
-      ))}
-    </div>
-  )
-}
 
-export default TeamBuilder
+        {/* Hero Name */}
+        <p className="text-sm text-zinc-400 opacity-75 truncate">{hero.name}</p>
+      </div>
+    ))}
+  </div>
+</div>
 
-//consultar a la api de stratz para generar un json o tsx con los datos de los heroes meta.
+  );
+};
+
+export default TeamBuilder;

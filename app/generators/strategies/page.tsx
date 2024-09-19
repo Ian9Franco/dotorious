@@ -1,112 +1,86 @@
-'use client'
+'use client';
 
-import React, { useState, useCallback, useEffect } from "react"
-import { Navigation } from "../../components/nav"
-import TeamBuilder from "../../components/teambuilder"
-import { heroesData, Hero } from '../../data/heroesData'
-import { assignLine } from '../../data/heroUtils'
-
-interface HeroWinRate {
-  heroId: number;
-  winRate: number;
-}
+import React, { useState, useCallback, useEffect } from 'react';
+import { Navigation } from '../../components/nav';
+import TeamBuilder from '../../components/teambuilder';
+import { heroesData, Hero } from '../../data/heroesData';
 
 export default function StrategiesPage() {
-  const [team, setTeam] = useState<Hero[]>([])
-  const [combo, setCombo] = useState<Hero[]>([])
-  const [isGeneratingTeam, setIsGeneratingTeam] = useState(false)
-  const [isGeneratingCombo, setIsGeneratingCombo] = useState(false)
-  const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
+  const [team, setTeam] = useState<Hero[]>([]);
+  const [isGeneratingTeam, setIsGeneratingTeam] = useState(false);
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+  const [teamLogic, setTeamLogic] = useState<"lane" | "legis">("lane");
 
   useEffect(() => {
-    setAudio(new Audio('/path-to-your-sound.mp3'))
-  }, [])
+    setAudio(new Audio('/audio/team/announcer_battle_prepare_01.mp3'));
+  }, []);
 
   const generateTeam = useCallback((): Hero[] => {
-    const newTeam: Hero[] = []
-    const usedHeroes = new Set<number>()
-    const lines = ["Hard Carry", "Mid", "Offlane", "Secondary Support", "Primary Support"]
+    const newTeam: Hero[] = [];
+    const roles = ['Carry', 'Mid', 'Offlane', 'Secondary Support', 'Primary Support'];
+    const availableHeroes = [...heroesData];
 
-    lines.forEach(line => {
-      let availableHeroes = heroesData.filter(hero => 
-        !usedHeroes.has(hero.id) && assignLine(hero) === line
-      )
-
-      // If no hero is available for a specific line, select from all remaining heroes
-      if (availableHeroes.length === 0) {
-        availableHeroes = heroesData.filter(hero => !usedHeroes.has(hero.id))
-      }
-
-      if (availableHeroes.length > 0) {
-        const randomHero = availableHeroes[Math.floor(Math.random() * availableHeroes.length)]
-        newTeam.push(randomHero)
-        usedHeroes.add(randomHero.id)
-      }
-    })
-
-    return newTeam
-  }, [])
-
-  const generateRandomHeroes = useCallback((count: number): Hero[] => {
-    const shuffled = [...heroesData].sort(() => 0.5 - Math.random())
-    return shuffled.slice(0, count)
-  }, [])
-
-  const fetchHeroWinRates = useCallback(async (heroes: Hero[]): Promise<Hero[]> => {
-    try {
-      const response = await fetch('https://api.stratz.com/api/v1/Hero/winRate?isCompetitive=true', {
-        headers: {
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRATZ_API_KEY}`
-        }
-      })
-      const data: HeroWinRate[] = await response.json()
+    roles.forEach((role) => {
+      const heroesForRole = availableHeroes.filter(hero => hero[teamLogic].includes(role));
       
-      const heroWinRates = new Map(data.map(hero => [hero.heroId, hero.winRate]))
+      if (heroesForRole.length > 0) {
+        const selectedHero = heroesForRole[Math.floor(Math.random() * heroesForRole.length)];
+        newTeam.push(selectedHero);
+        
+        // Remove the selected hero and any heroes that share a role with it
+        const index = availableHeroes.findIndex(hero => hero.id === selectedHero.id);
+        if (index > -1) {
+          availableHeroes.splice(index, 1);
+        }
+        availableHeroes.forEach((hero, idx) => {
+          if (hero[teamLogic].some(r => selectedHero[teamLogic].includes(r))) {
+            availableHeroes.splice(idx, 1);
+          }
+        });
+      }
+    });
 
-      return heroes.map(hero => ({
-        ...hero,
-        winRate: heroWinRates.get(hero.id) || 0
-      }))
-    } catch (error) {
-      console.error('Error fetching hero win rates:', error)
-      return heroes // Return original heroes if API call fails
+    return newTeam;
+  }, [teamLogic]);
+
+  const handleGenerateTeam = useCallback(() => {
+    setIsGeneratingTeam(true);
+    if (audio) audio.play();
+
+    const newTeam = generateTeam();
+    setTeam(newTeam);
+    setIsGeneratingTeam(false);
+  }, [generateTeam, audio]);
+
+  const handleHeroChange = useCallback((roleIndex: number) => {
+    const roles = ['Carry', 'Mid', 'Offlane', 'Secondary Support', 'Primary Support'];
+    const currentRole = roles[roleIndex];
+    const availableHeroes = heroesData.filter(hero => 
+      hero[teamLogic].includes(currentRole) && 
+      !team.some(teamHero => teamHero.id === hero.id || teamHero[teamLogic].some(r => hero[teamLogic].includes(r)))
+    );
+
+    if (availableHeroes.length > 0) {
+      const newHero = availableHeroes[Math.floor(Math.random() * availableHeroes.length)];
+      const newTeam = [...team];
+      newTeam[roleIndex] = newHero;
+      setTeam(newTeam);
     }
-  }, [])
-
-  const handleGenerateTeam = useCallback(async () => {
-    setIsGeneratingTeam(true)
-    if (audio) audio.play()
-    const newTeam = generateTeam()
-    const teamWithWinRates = await fetchHeroWinRates(newTeam)
-    setTeam(teamWithWinRates)
-    setIsGeneratingTeam(false)
-  }, [generateTeam, fetchHeroWinRates, audio])
-
-  const handleGenerateCombo = useCallback(() => {
-    setIsGeneratingCombo(true)
-    if (audio) audio.play()
-    const newCombo = generateRandomHeroes(5)
-    setCombo(newCombo)
-    setIsGeneratingCombo(false)
-  }, [generateRandomHeroes, audio])
+  }, [team, teamLogic]);
 
   return (
     <div className="relative pb-16">
-      <Navigation />
+      <Navigation teamLogic={teamLogic} setTeamLogic={setTeamLogic} />
       <div className="px-6 pt-20 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-16 md:pt-24 lg:pt-32">
         <div className="max-w-2xl mx-auto lg:mx-0">
-          <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
-            Strategies
-          </h2>
-          <p className="mt-4 text-zinc-400">
-            Generate team compositions and hero combos for your Dota 2 matches.
-          </p>
+          <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">Strategies</h2>
+          <p className="mt-4 text-zinc-400">Generate team compositions for your Dota 2 matches.</p>
         </div>
         <div className="w-full h-px bg-zinc-800" />
         <div className="grid grid-cols-1 gap-8 mx-auto">
           <div className="team-generator flex flex-col items-start justify-between rounded-lg border border-zinc-700 p-6 transition-all duration-300 hover:border-zinc-500 w-full max-w-4xl mx-auto">
-            <h3 className="text-xl font-medium text-zinc-300">Team Generator</h3>
-            <p className="mt-2 text-zinc-400">Generate a balanced team composition.</p>
+            <h3 className="text-xl font-medium text-zinc-300">Team Generator ({teamLogic})</h3>
+            <p className="mt-2 text-zinc-400">Generate a balanced team composition. Double-click or double-tap a hero to change it.</p>
             <div className="mt-4 mb-6 w-full">
               <button
                 onClick={handleGenerateTeam}
@@ -116,25 +90,10 @@ export default function StrategiesPage() {
                 {isGeneratingTeam ? 'Generating...' : 'Generate Team'}
               </button>
             </div>
-            <TeamBuilder team={team} />
-          </div>
-  
-          <div className="team-generator flex flex-col items-start justify-between rounded-lg border border-zinc-700 p-6 transition-all duration-300 hover:border-zinc-500 w-full max-w-4xl mx-auto">
-            <h3 className="text-xl font-medium text-zinc-300">Combo Generator</h3>
-            <p className="mt-2 text-zinc-400">Create powerful hero combinations.</p>
-            <div className="mt-4 mb-6 w-full">
-              <button
-                onClick={handleGenerateCombo}
-                disabled={isGeneratingCombo}
-                className="w-full px-4 py-2 text-sm font-medium text-zinc-300 bg-zinc-800 rounded-md hover:bg-zinc-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:ring-opacity-50"
-              >
-                {isGeneratingCombo ? 'Generating...' : 'Generate Combo'}
-              </button>
-            </div>
-            <TeamBuilder team={combo} />
+            {team.length > 0 && <TeamBuilder team={team} onHeroChange={handleHeroChange} teamLogic={teamLogic} />}
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
