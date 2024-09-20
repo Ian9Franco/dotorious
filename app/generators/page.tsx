@@ -36,6 +36,7 @@ export default function GeneratorsPage() {
   const [user, setUser] = useState<User | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
+  const [showPlayerIdModal, setShowPlayerIdModal] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -52,19 +53,27 @@ export default function GeneratorsPage() {
     const snapshot = await get(playerIdRef);
     if (snapshot.exists()) {
       setPlayerId(snapshot.val());
+    } else {
+      setShowPlayerIdModal(true);
     }
   };
 
   const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      let userCredential;
       if (isSignUp) {
-        await createUserWithEmailAndPassword(auth, email, password);
+        userCredential = await createUserWithEmailAndPassword(auth, email, password);
       } else {
-        await signInWithEmailAndPassword(auth, email, password);
+        userCredential = await signInWithEmailAndPassword(auth, email, password);
       }
+      
+      // Save email to Realtime Database
+      await set(ref(db, `players/${userCredential.user.uid}/email`), email);
+      
       setErrorMessage("");
       setShowModal(false);
+      setShowPlayerIdModal(true);
     } catch (error) {
       setErrorMessage(isSignUp ? "Failed to sign up. Please try again." : "Failed to log in. Please check your credentials.");
     }
@@ -87,6 +96,7 @@ export default function GeneratorsPage() {
     try {
       await set(ref(db, `players/${user.uid}/playerId`), playerId);
       setErrorMessage("");
+      setShowPlayerIdModal(false);
     } catch (error) {
       setErrorMessage("Failed to save player ID. Please try again.");
     }
@@ -219,7 +229,7 @@ export default function GeneratorsPage() {
         </div>
       )}
 
-      {user && !playerId && (
+      {showPlayerIdModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-zinc-800 p-8 rounded-lg max-w-md w-full">
             <h3 className="text-2xl font-bold text-zinc-100 mb-4">Enter Your Player ID</h3>
@@ -248,7 +258,7 @@ export default function GeneratorsPage() {
               </button>
             </form>
             <button
-              onClick={() => setPlayerId("")}
+              onClick={() => setShowPlayerIdModal(false)}
               className="mt-4 w-full px-4 py-2 bg-zinc-700 text-zinc-300 rounded hover:bg-zinc-600 transition-colors duration-300"
             >
               Close

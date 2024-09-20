@@ -1,14 +1,15 @@
 "use client";
 
-import { ArrowLeft, Moon, Sun } from "lucide-react";
+import { ArrowLeft, Moon, Sun, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { Menu } from "./menu";
 import { usePathname } from "next/navigation";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref as dbRef, onValue } from "firebase/database";
+import { getAuth } from "firebase/auth";
+import { getDatabase, ref as dbRef, onValue, DataSnapshot } from "firebase/database";
 import { app } from "../firebase/firebaseConfig";
 import { useTheme } from "next-themes";
+import { Chat } from "./Chat";
 
 const auth = getAuth(app);
 const db = getDatabase(app);
@@ -24,6 +25,7 @@ export const Navigation: React.FC<NavigationProps> = ({ teamLogic, setTeamLogic 
   const pathname = usePathname();
   const [userName, setUserName] = useState<string | null>(null);
   const { theme, setTheme } = useTheme();
+  const [showChat, setShowChat] = useState(false);
 
   useEffect(() => {
     if (!ref.current) return;
@@ -42,7 +44,7 @@ export const Navigation: React.FC<NavigationProps> = ({ teamLogic, setTeamLogic 
       fetchUserName(parsedUser.uid);
     }
 
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         localStorage.setItem('user', JSON.stringify(user));
         fetchUserName(user.uid);
@@ -57,7 +59,7 @@ export const Navigation: React.FC<NavigationProps> = ({ teamLogic, setTeamLogic 
 
   const fetchUserName = (userId: string) => {
     const userRef = dbRef(db, `players/${userId}/playerId`);
-    onValue(userRef, (snapshot) => {
+    onValue(userRef, (snapshot: DataSnapshot) => {
       const playerId = snapshot.val();
       if (playerId) {
         fetch(`https://api.opendota.com/api/players/${playerId}`)
@@ -81,12 +83,10 @@ export const Navigation: React.FC<NavigationProps> = ({ teamLogic, setTeamLogic 
   const toggleTeamLogic = () => {
     setTeamLogic(prev => {
       if (prev === "lane") return "legis";
-      if (prev === "legis") return "Asuza"; // Changed 'asuza' to 'Asuza'
+      if (prev === "legis") return "Asuza";
       return "lane";
     });
   };
-  
-  
 
   // Hide navigation on the home page
   if (pathname === "/") return null;
@@ -111,12 +111,12 @@ export const Navigation: React.FC<NavigationProps> = ({ teamLogic, setTeamLogic 
           isIntersecting
             ? "bg-zinc-900/0 border-transparent"
             : "bg-zinc-900/500 border-zinc-800"
-        }`}
+        } ${theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'}`}
       >
         <div className="container flex items-center justify-between p-6 mx-auto">
           <Link
             href={getParentPath(pathname)}
-            className="duration-200 text-zinc-300 hover:text-zinc-100"
+            className={`duration-200 ${theme === 'dark' ? 'text-zinc-300 hover:text-zinc-100' : 'text-zinc-600 hover:text-zinc-900'}`}
           >
             <ArrowLeft className="w-6 h-6" />
           </Link>
@@ -128,7 +128,7 @@ export const Navigation: React.FC<NavigationProps> = ({ teamLogic, setTeamLogic 
                 <Link
                   key={section.href}
                   href={section.href}
-                  className="duration-200 text-zinc-400 hover:text-zinc-100"
+                  className={`duration-200 ${theme === 'dark' ? 'text-zinc-400 hover:text-zinc-100' : 'text-zinc-600 hover:text-zinc-900'}`}
                 >
                   {section.name}
                 </Link>
@@ -139,22 +139,40 @@ export const Navigation: React.FC<NavigationProps> = ({ teamLogic, setTeamLogic 
           {/* Show the user's name if available */}
           {userName && (
             <div className="flex justify-end items-center gap-4">
-              <span className="text-zinc-300">Ah sos vos {userName}</span>
+              <span className={theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'}>{userName}</span>
               {isStrategiesPage && (
                 <button
                   onClick={toggleTeamLogic}
-                  className="px-3 py-1 text-sm bg-zinc-800 text-zinc-200 rounded-md hover:bg-zinc-700 transition-colors"
+                  className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                    theme === 'dark'
+                      ? 'bg-zinc-800 text-zinc-200 hover:bg-zinc-700'
+                      : 'bg-zinc-200 text-zinc-800 hover:bg-zinc-300'
+                  }`}
                 >
-                     {teamLogic === "lane" && "Switch to Legis"}
-                    {teamLogic === "legis" && "Switch to Asuza"}
-                    {teamLogic === "Asuza" && "Switch to Lane"}
+                  {teamLogic === "lane" && "Switch to Legis"}
+                  {teamLogic === "legis" && "Switch to Asuza"}
+                  {teamLogic === "Asuza" && "Switch to Lane"}
                 </button>
               )}
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="p-2 text-zinc-300 hover:text-zinc-100"
+                className={`p-2 ${
+                  theme === 'dark'
+                    ? 'text-zinc-300 hover:text-zinc-100'
+                    : 'text-zinc-600 hover:text-zinc-900'
+                }`}
               >
                 {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </button>
+              <button
+                onClick={() => setShowChat(!showChat)}
+                className={`p-2 ${
+                  theme === 'dark'
+                    ? 'text-zinc-300 hover:text-zinc-100'
+                    : 'text-zinc-600 hover:text-zinc-900'
+                }`}
+              >
+                <MessageCircle className="w-5 h-5" />
               </button>
             </div>
           )}
@@ -162,6 +180,7 @@ export const Navigation: React.FC<NavigationProps> = ({ teamLogic, setTeamLogic 
           <Menu />
         </div>
       </div>
+      {showChat && <Chat />}
     </header>
   );
 };

@@ -38,7 +38,7 @@ export interface Hero {
       "attack_type": "Melee",
       "roles": ["Initiator", "Durable", "Disabler", "Carry"],
       "image": "/images/heroesIMG/axe.png",
-      "lane": ["Offlane", "Carry"],
+      "lane": ["Offlane"],
       "damage_type": ["Physical", "Pure"],
       "skill": ["Stun", "Armor", "Fear"],
       "legis": ["Primary Support"]
@@ -50,7 +50,7 @@ export interface Hero {
       "attack_type": "Ranged",
       "roles": ["Support", "Disabler", "Nuker"],
       "image": "/images/heroesIMG/bane.png",
-      "lane": ["Primary Support", "Mid"],
+      "lane": ["Primary Support"],
       "damage_type": ["Magic", "Pure"],
       "skill": ["Stun", "Fear", "Cure", "Immunity"],
       "legis": ["Hard Carry"]

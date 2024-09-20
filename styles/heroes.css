@@ -81,3 +81,47 @@
     max-width: 70px;
   }
 }
+.team-generator {
+  transition: all 0.3s ease;
+}
+
+.team-generator:hover {
+  transform: scale(1.02);
+}
+
+.hero {
+  transition: all 0.3s ease;
+}
+
+.hero:hover {
+  transform: scale(1.05);
+}
+
+.team-display {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.hero {
+  flex: 0 1 calc(20% - 1rem);
+  min-width: 80px;
+  max-width: 120px;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    flex: 0 1 calc(33.33% - 1rem);
+    min-width: 60px;
+    max-width: 80px;
+  }
+}
+
+@media (max-width: 400px) {
+  .hero {
+    flex: 0 1 calc(50% - 1rem);
+    min-width: 50px;
+    max-width: 70px;
+  }
+}
