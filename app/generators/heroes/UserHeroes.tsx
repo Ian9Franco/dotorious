@@ -1,164 +1,183 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
-import { getDatabase, ref, get } from "firebase/database";
+import React, { useState, useEffect } from "react";
+import { Navigation } from "../../components/nav";
 import { getAuth } from "firebase/auth";
-import { heroesData, Hero } from '../../data/heroesData';
+import { getDatabase, ref, get, set } from "firebase/database";
+import { app } from "../../firebase/firebaseConfig";
+import Link from 'next/link';
+import { motion } from "framer-motion";
+import OtherUsersHeroes from "./OtherUsersHeroes"; // Componente para mostrar héroes de otros usuarios
 
-interface OpenDotaHero {
-  hero_id: number;
-  last_played: number;
-  games: number;
-  win: number;
-}
+const auth = getAuth(app);
+const db = getDatabase(app);
 
-interface OpenDotaMatch {
-  hero_id: number;
-  player_slot: number;
-  radiant_win: boolean;
-  start_time: number;
-}
-
-const UserHeroes: React.FC = () => {
-  const [lastPlayedHeroes, setLastPlayedHeroes] = useState<Hero[]>([]);
-  const [mostPlayedHeroes, setMostPlayedHeroes] = useState<Hero[]>([]);
-  const [bestWinrateHeroes, setBestWinrateHeroes] = useState<Hero[]>([]);
+export default function HeroesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [mostUsedHeroes, setMostUsedHeroes] = useState<any[]>([]);
+  const [userHeroes, setUserHeroes] = useState<any[]>([]);
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchUserHeroes = async () => {
       try {
-        const auth = getAuth();
         const user = auth.currentUser;
-        
         if (!user) {
           setError("User not logged in");
           setLoading(false);
           return;
         }
 
-        const db = getDatabase();
-        const userIdRef = ref(db, `players/${user.uid}/playerId`);
-        const snapshot = await get(userIdRef);
-        
+        const userRef = ref(db, `players/${user.uid}/steamAccountId`);
+        const snapshot = await get(userRef);
         if (!snapshot.exists()) {
-          setError("User ID not found");
+          setError("Steam Account ID not found");
           setLoading(false);
           return;
         }
 
-        const playerId = snapshot.val();
+        const steamAccountId = snapshot.val();
+        const query = `
+          query {
+            player(steamAccountId: ${steamAccountId}) {
+              heroes {
+                id
+                name
+                pickRate
+                image
+              }
+            }
+          }
+        `;
 
-        // Fetch last played heroes
-        const recentMatchesResponse = await fetch(`https://api.opendota.com/api/players/${playerId}/recentMatches`);
-        const recentMatches: OpenDotaMatch[] = await recentMatchesResponse.json();
+        const response = await fetch('https://api.stratz.com/graphql', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRATZ_API_KEY}`
+          },
+          body: JSON.stringify({ query })
+        });
 
-        // Fetch hero stats
-        const heroStatsResponse = await fetch(`https://api.opendota.com/api/players/${playerId}/heroes`);
-        const heroStats: OpenDotaHero[] = await heroStatsResponse.json();
+        if (!response.ok) throw new Error('Failed to fetch user heroes');
+        const result = await response.json();
 
-        const processedHeroes = processHeroData(recentMatches, heroStats);
-        setLastPlayedHeroes(processedHeroes.lastPlayed);
-        setMostPlayedHeroes(processedHeroes.mostPlayed);
-        setBestWinrateHeroes(processedHeroes.bestWinrate);
-      } catch (err) {
-        setError("Failed to fetch hero data");
-        console.error(err);
-      } finally {
-        setLoading(false);
+        const heroes = result.data.player.heroes.sort((a: any, b: any) => b.pickRate - a.pickRate).slice(0, 5);
+        setUserHeroes(heroes);
+      } catch (error) {
+        console.error('Error fetching user heroes:', error);
+        setError('Failed to fetch user heroes. Please try again later.');
       }
     };
 
-    fetchUserData();
+    const fetchMostUsedHeroes = async () => {
+      try {
+        const query = `
+          query {
+            heroes {
+              id
+              name
+              pickRate
+              image
+            }
+          }
+        `;
+
+        const response = await fetch('https://api.stratz.com/graphql', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRATZ_API_KEY}`
+          },
+          body: JSON.stringify({ query })
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch heroes data');
+        const result = await response.json();
+
+        const heroes = result.data.heroes.sort((a: any, b: any) => b.pickRate - a.pickRate).slice(0, 5);
+        setMostUsedHeroes(heroes);
+      } catch (error) {
+        console.error('Error fetching heroes:', error);
+        setError('Failed to fetch heroes data. Please try again later.');
+      }
+    };
+
+    fetchUserHeroes();
+    fetchMostUsedHeroes();
   }, []);
 
-  const processHeroData = (recentMatches: OpenDotaMatch[], heroStats: OpenDotaHero[]) => {
-    const heroMap = new Map(heroesData.map(hero => [hero.id, hero]));
-    
-    const lastPlayed = recentMatches
-      .slice(0, 5)
-      .map(match => {
-        const hero = heroMap.get(match.hero_id);
-        return hero ? { ...hero, last_played: match.start_time } : undefined;
-      })
-      .filter((hero): hero is Hero & { last_played: number } => hero !== undefined);
-
-    const mostPlayed = heroStats
-      .sort((a, b) => b.games - a.games)
-      .slice(0, 5)
-      .map(stat => {
-        const hero = heroMap.get(stat.hero_id);
-        return hero ? { ...hero, games: stat.games } : undefined;
-      })
-      .filter((hero): hero is Hero & { games: number } => hero !== undefined);
-
-    const bestWinrate = heroStats
-      .filter(stat => stat.games >= 10)
-      .sort((a, b) => (b.win / b.games) - (a.win / a.games))
-      .slice(0, 5)
-      .map(stat => {
-        const hero = heroMap.get(stat.hero_id);
-        return hero ? { ...hero, winrate: stat.win / stat.games } : undefined;
-      })
-      .filter((hero): hero is Hero & { winrate: number } => hero !== undefined);
-
-    return { lastPlayed, mostPlayed, bestWinrate };
-  };
-
   if (loading) {
-    return <div className="text-center text-zinc-400">Loading hero data...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-zinc-900">
+        <div className="text-zinc-100 text-2xl">lpm no anda mañana lo arreglo no jodan...</div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="text-center text-red-500">{error}</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-900">
+        <div className="text-red-500 text-2xl mb-4">{error}</div>
+        <Link href="/generators" className="text-zinc-100 underline">
+          Return to Generators
+        </Link>
+      </div>
+    );
   }
 
-  const HeroList: React.FC<{ heroes: (Hero & { winrate?: number, games?: number, last_played?: number })[], title: string, showWinrate?: boolean, showGames?: boolean, showLastPlayed?: boolean }> = ({ heroes, title, showWinrate, showGames, showLastPlayed }) => (
-    <div className="mb-8">
-      <h3 className="text-xl font-bold mb-4 text-zinc-100">{title}</h3>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-        {heroes.map((hero) => (
-          <div key={hero.id} className="flex flex-col items-center p-2 rounded-lg border border-zinc-700 bg-zinc-800">
-            <div className="relative w-16 h-16 mb-2">
-              <Image
-                src={hero.image}
-                alt={hero.name}
-                layout="fill"
-                objectFit="cover"
-                className="rounded-md"
-              />
-            </div>
-            <span className="text-zinc-300 text-xs text-center line-clamp-1">{hero.name}</span>
-            {showWinrate && hero.winrate !== undefined && (
-              <span className="text-zinc-400 text-xs">
-                Winrate: {(hero.winrate * 100).toFixed(2)}%
-              </span>
-            )}
-            {showGames && hero.games !== undefined && (
-              <span className="text-zinc-400 text-xs">
-                Games: {hero.games}
-              </span>
-            )}
-            {showLastPlayed && hero.last_played !== undefined && (
-              <span className="text-zinc-400 text-xs">
-                Last played: {new Date(hero.last_played * 1000).toLocaleDateString()}
-              </span>
-            )}
-          </div>
-        ))}
+  return (
+    <div className="relative pb-16 bg-zinc-900 min-h-screen">
+      <Navigation teamLogic={"lane"} setTeamLogic={function (value: React.SetStateAction<"lane" | "legis" | "Asuza">): void {
+        throw new Error("Function not implemented.");
+      } } />
+      <div className="px-6 pt-20 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-16 md:pt-24 lg:pt-32">
+        <h2 className="text-4xl font-bold tracking-tight text-zinc-100 sm:text-5xl">
+          Most Used Heroes
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+          {mostUsedHeroes.map(hero => (
+            <motion.div
+              key={hero.id}
+              className="flex flex-col items-center p-2 rounded-lg border border-zinc-700 bg-zinc-800"
+              whileHover={{ scale: 1.05 }}
+            >
+              <div className="relative w-16 h-16 mb-2">
+                {<img
+                  src={hero.image}
+                  alt={hero.name}
+                  className="rounded-md"
+                />}
+              </div>
+              <span className="text-zinc-300 text-xs text-center line-clamp-1">{hero.name}</span>
+              <span className="text-zinc-400 text-xs">Pick Rate: {hero.pickRate}%</span>
+            </motion.div>
+          ))}
+        </div>
+        <h2 className="text-4xl font-bold tracking-tight text-zinc-100 sm:text-5xl">
+          Your Heroes
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+          {userHeroes.map(hero => (
+            <motion.div
+              key={hero.id}
+              className="flex flex-col items-center p-2 rounded-lg border border-zinc-700 bg-zinc-800"
+              whileHover={{ scale: 1.05 }}
+            >
+              <div className="relative w-16 h-16 mb-2">
+               {/*  <img
+                  src={hero.image}
+                  alt={hero.name}
+                  className="rounded-md"
+                /> */}
+              </div>
+              <span className="text-zinc-300 text-xs text-center line-clamp-1">{hero.name}</span>
+              <span className="text-zinc-400 text-xs">Pick Rate: {hero.pickRate}%</span>
+            </motion.div>
+          ))}
+        </div>
+        <OtherUsersHeroes />
       </div>
     </div>
   );
-
-  return (
-    <div>
-      <HeroList heroes={lastPlayedHeroes} title="Last 5 Heroes Played" showLastPlayed />
-      <HeroList heroes={mostPlayedHeroes} title="Top 5 Most Played Heroes" showGames />
-      <HeroList heroes={bestWinrateHeroes} title="Top 5 Heroes by Winrate" showWinrate />
-    </div>
-  );
-};
-
-export default UserHeroes;
+}

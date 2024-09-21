@@ -5,7 +5,6 @@ import { Navigation } from '../../components/nav';
 import TeamBuilder from '../../components/teambuilder';
 import { heroesData, Hero } from '../../data/heroesData';
 
-
 export default function StrategiesPage() {
   const [team, setTeam] = useState<Hero[]>([]);
   const [isGeneratingTeam, setIsGeneratingTeam] = useState(false);
@@ -65,9 +64,9 @@ export default function StrategiesPage() {
   const handleHeroChange = useCallback((roleIndex: number) => {
     const roles = ['Carry', 'Mid', 'Offlane', 'Secondary Support', 'Primary Support'];
     const currentRole = roles[roleIndex];
-    
+
     let availableHeroes: Hero[];
-  
+
     if (teamLogic === 'Asuza') {
       const asuzaHeroes = heroesData.filter(hero => hero.id === 106 || hero.id === 12);
       availableHeroes = asuzaHeroes;
@@ -80,7 +79,7 @@ export default function StrategiesPage() {
         )
       );
     }
-  
+
     if (availableHeroes.length > 0) {
       const newHero = availableHeroes[Math.floor(Math.random() * availableHeroes.length)];
       const newTeam = [...team];

@@ -32,11 +32,11 @@ export default function GeneratorsPage() {
   const [showModal, setShowModal] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [playerId, setPlayerId] = useState("");
+  const [steamAccountId, setSteamAccountId] = useState("");
   const [user, setUser] = useState<User | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
-  const [showPlayerIdModal, setShowPlayerIdModal] = useState(false);
+  const [showSteamAccountIdModal, setShowSteamAccountIdModal] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -49,12 +49,12 @@ export default function GeneratorsPage() {
   }, []);
 
   const checkIfIdSaved = async (userId: string) => {
-    const playerIdRef = ref(db, `players/${userId}/playerId`);
-    const snapshot = await get(playerIdRef);
+    const steamAccountIdRef = ref(db, `players/${userId}/steamAccountId`);
+    const snapshot = await get(steamAccountIdRef);
     if (snapshot.exists()) {
-      setPlayerId(snapshot.val());
+      setSteamAccountId(snapshot.val());
     } else {
-      setShowPlayerIdModal(true);
+      setShowSteamAccountIdModal(true);
     }
   };
 
@@ -68,12 +68,11 @@ export default function GeneratorsPage() {
         userCredential = await signInWithEmailAndPassword(auth, email, password);
       }
       
-      // Save email to Realtime Database
       await set(ref(db, `players/${userCredential.user.uid}/email`), email);
       
       setErrorMessage("");
       setShowModal(false);
-      setShowPlayerIdModal(true);
+      setShowSteamAccountIdModal(true);
     } catch (error) {
       setErrorMessage(isSignUp ? "Failed to sign up. Please try again." : "Failed to log in. Please check your credentials.");
     }
@@ -83,22 +82,22 @@ export default function GeneratorsPage() {
     try {
       await signOut(auth);
       setErrorMessage("");
-      setPlayerId("");
+      setSteamAccountId("");
     } catch (error) {
       setErrorMessage("Failed to log out. Please try again.");
     }
   };
 
-  const handleSubmitId = async (e: React.FormEvent) => {
+  const handleSubmitSteamAccountId = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
 
     try {
-      await set(ref(db, `players/${user.uid}/playerId`), playerId);
+      await set(ref(db, `players/${user.uid}/steamAccountId`), steamAccountId);
       setErrorMessage("");
-      setShowPlayerIdModal(false);
+      setShowSteamAccountIdModal(false);
     } catch (error) {
-      setErrorMessage("Failed to save player ID. Please try again.");
+      setErrorMessage("Failed to save Steam Account ID. Please try again.");
     }
   };
 
@@ -229,23 +228,23 @@ export default function GeneratorsPage() {
         </div>
       )}
 
-      {showPlayerIdModal && (
+      {showSteamAccountIdModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-zinc-800 p-8 rounded-lg max-w-md w-full">
-            <h3 className="text-2xl font-bold text-zinc-100 mb-4">Enter Your Player ID</h3>
-            <form onSubmit={handleSubmitId} className="space-y-4">
+            <h3 className="text-2xl font-bold text-zinc-100 mb-4">Enter Your Steam Account ID</h3>
+            <form onSubmit={handleSubmitSteamAccountId} className="space-y-4">
               <div>
                 <label
-                  htmlFor="playerId"
+                  htmlFor="steamAccountId"
                   className="block text-sm font-medium text-zinc-300"
                 >
-                  Player ID
+                  Steam Account ID
                 </label>
                 <input
                   type="text"
-                  id="playerId"
-                  value={playerId}
-                  onChange={(e) => setPlayerId(e.target.value)}
+                  id="steamAccountId"
+                  value={steamAccountId}
+                  onChange={(e) => setSteamAccountId(e.target.value)}
                   className="mt-1 block w-full rounded-md border-zinc-600 bg-zinc-700 text-zinc-100 shadow-sm focus:border-zinc-500 focus:ring-zinc-500"
                   required
                 />
@@ -254,11 +253,11 @@ export default function GeneratorsPage() {
                 type="submit"
                 className="w-full px-4 py-2 bg-zinc-600 text-white rounded hover:bg-zinc-500 transition-colors duration-300"
               >
-                Save Player ID
+                Save Steam Account ID
               </button>
             </form>
             <button
-              onClick={() => setShowPlayerIdModal(false)}
+              onClick={() => setShowSteamAccountIdModal(false)}
               className="mt-4 w-full px-4 py-2 bg-zinc-700 text-zinc-300 rounded hover:bg-zinc-600 transition-colors duration-300"
             >
               Close

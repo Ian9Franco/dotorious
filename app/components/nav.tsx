@@ -58,14 +58,31 @@ export const Navigation: React.FC<NavigationProps> = ({ teamLogic, setTeamLogic 
   }, []);
 
   const fetchUserName = (userId: string) => {
-    const userRef = dbRef(db, `players/${userId}/playerId`);
+    const userRef = dbRef(db, `players/${userId}/steamAccountId`);
     onValue(userRef, (snapshot: DataSnapshot) => {
-      const playerId = snapshot.val();
-      if (playerId) {
-        fetch(`https://api.opendota.com/api/players/${playerId}`)
+      const steamAccountId = snapshot.val();
+      if (steamAccountId) {
+        const query = `
+          query {
+            player(steamAccountId: ${steamAccountId}) {
+              steamAccount {
+                name
+              }
+            }
+          }
+        `;
+
+        fetch('https://api.stratz.com/graphql', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRATZ_API_KEY}`
+          },
+          body: JSON.stringify({ query })
+        })
           .then((response) => response.json())
           .then((data) => {
-            const name = data.profile?.personaname || null;
+            const name = data.data.player.steamAccount.name || null;
             setUserName(name);
             localStorage.setItem('userName', name);
           })
