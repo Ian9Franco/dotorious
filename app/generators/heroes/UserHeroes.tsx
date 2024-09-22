@@ -1,22 +1,32 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { Navigation } from "../../components/nav";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, get, set } from "firebase/database";
 import { app } from "../../firebase/firebaseConfig";
 import Link from 'next/link';
 import { motion } from "framer-motion";
-import OtherUsersHeroes from "./OtherUsersHeroes"; // Componente para mostrar héroes de otros usuarios
+import Image from 'next/image';
 
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-export default function HeroesPage() {
+interface Hero {
+  id: number;
+  name: string;
+  shortName: string;
+  lastPlayedDateTime: string;
+}
+
+interface HeroStats {
+  heroId: number;
+  lastPlayedDateTime: string;
+}
+
+export default function UserHeroes() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [mostUsedHeroes, setMostUsedHeroes] = useState<any[]>([]);
-  const [userHeroes, setUserHeroes] = useState<any[]>([]);
+  const [userHeroes, setUserHeroes] = useState<Hero[]>([]);
 
   useEffect(() => {
     const fetchUserHeroes = async () => {
@@ -28,23 +38,31 @@ export default function HeroesPage() {
           return;
         }
 
-        const userRef = ref(db, `players/${user.uid}/steamAccountId`);
+        const userRef = ref(db, `players/${user.uid}`);
         const snapshot = await get(userRef);
         if (!snapshot.exists()) {
+          setError("User data not found");
+          setLoading(false);
+          return;
+        }
+
+        const userData = snapshot.val();
+        const steamAccountId = userData.steamAccountId;
+
+        if (!steamAccountId) {
           setError("Steam Account ID not found");
           setLoading(false);
           return;
         }
 
-        const steamAccountId = snapshot.val();
         const query = `
           query {
             player(steamAccountId: ${steamAccountId}) {
-              heroes {
-                id
-                name
-                pickRate
-                image
+              matches(request: { take: 5 }) {
+                players(steamAccountId: ${steamAccountId}) {
+                  heroId
+                }
+                startDateTime
               }
             }
           }
@@ -54,7 +72,7 @@ export default function HeroesPage() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRATZ_API_KEY}`
+            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdWJqZWN0IjoiZWJjNDhkZWMtMDg2Zi00ZjQwLThjZWMtZWU4MDg2NTRmYjc4IiwiU3RlYW1JZCI6IjMzNjQwMzIxMyIsIm5iZiI6MTcyNjMyNzk3MiwiZXhwIjoxNzU3ODYzOTcyLCJpYXQiOjE3MjYzMjc5NzIsImlzcyI6Imh0dHBzOi8vYXBpLnN0cmF0ei5jb20ifQ.kviG_lPHInTovL0XM76J6DwOk2pQrmMPsSPyrLspoKs'
           },
           body: JSON.stringify({ query })
         });
@@ -62,55 +80,69 @@ export default function HeroesPage() {
         if (!response.ok) throw new Error('Failed to fetch user heroes');
         const result = await response.json();
 
-        const heroes = result.data.player.heroes.sort((a: any, b: any) => b.pickRate - a.pickRate).slice(0, 5);
-        setUserHeroes(heroes);
+        if (result.errors) {
+          throw new Error(result.errors[0].message);
+        }
+
+        const heroStats: HeroStats[] = result.data.player.matches.map((match: { players: { heroId: number }[], startDateTime: string }) => ({
+          heroId: match.players[0].heroId,
+          lastPlayedDateTime: match.startDateTime
+        }));
+
+        const heroesWithDetails = await Promise.all(heroStats.map(async (hero) => {
+          const heroQuery = `
+            query {
+              constants {
+                hero(id: ${hero.heroId}) {
+                  id
+                  displayName
+                  shortName
+                }
+              }
+            }
+          `;
+
+          const heroResponse = await fetch('https://api.stratz.com/graphql', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdWJqZWN0IjoiZWJjNDhkZWMtMDg2Zi00ZjQwLThjZWMtZWU4MDg2NTRmYjc4IiwiU3RlYW1JZCI6IjMzNjQwMzIxMyIsIm5iZiI6MTcyNjMyNzk3MiwiZXhwIjoxNzU3ODYzOTcyLCJpYXQiOjE3MjYzMjc5NzIsImlzcyI6Imh0dHBzOi8vYXBpLnN0cmF0ei5jb20ifQ.kviG_lPHInTovL0XM76J6DwOk2pQrmMPsSPyrLspoKs'
+            },
+            body: JSON.stringify({ query: heroQuery })
+          });
+
+          if (!heroResponse.ok) throw new Error('Failed to fetch hero details');
+          const heroResult = await heroResponse.json();
+          const heroDetails = heroResult.data.constants.hero;
+
+          return {
+            id: heroDetails.id,
+            name: heroDetails.displayName,
+            shortName: heroDetails.shortName,
+            lastPlayedDateTime: hero.lastPlayedDateTime
+          };
+        }));
+
+        setUserHeroes(heroesWithDetails);
+
+        // Save user heroes to Firebase
+        await set(ref(db, `userHeroes/${user.uid}`), heroesWithDetails);
+
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching user heroes:', error);
         setError('Failed to fetch user heroes. Please try again later.');
-      }
-    };
-
-    const fetchMostUsedHeroes = async () => {
-      try {
-        const query = `
-          query {
-            heroes {
-              id
-              name
-              pickRate
-              image
-            }
-          }
-        `;
-
-        const response = await fetch('https://api.stratz.com/graphql', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRATZ_API_KEY}`
-          },
-          body: JSON.stringify({ query })
-        });
-
-        if (!response.ok) throw new Error('Failed to fetch heroes data');
-        const result = await response.json();
-
-        const heroes = result.data.heroes.sort((a: any, b: any) => b.pickRate - a.pickRate).slice(0, 5);
-        setMostUsedHeroes(heroes);
-      } catch (error) {
-        console.error('Error fetching heroes:', error);
-        setError('Failed to fetch heroes data. Please try again later.');
+        setLoading(false);
       }
     };
 
     fetchUserHeroes();
-    fetchMostUsedHeroes();
   }, []);
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-zinc-900">
-        <div className="text-zinc-100 text-2xl">lpm no anda mañana lo arreglo no jodan...</div>
+        <div className="text-zinc-100 text-2xl">Loading your hero data...</div>
       </div>
     );
   }
@@ -127,56 +159,37 @@ export default function HeroesPage() {
   }
 
   return (
-    <div className="relative pb-16 bg-zinc-900 min-h-screen">
-      <Navigation teamLogic={"lane"} setTeamLogic={function (value: React.SetStateAction<"lane" | "legis" | "Asuza">): void {
-        throw new Error("Function not implemented.");
-      } } />
-      <div className="px-6 pt-20 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-16 md:pt-24 lg:pt-32">
-        <h2 className="text-4xl font-bold tracking-tight text-zinc-100 sm:text-5xl">
-          Most Used Heroes
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-          {mostUsedHeroes.map(hero => (
-            <motion.div
-              key={hero.id}
-              className="flex flex-col items-center p-2 rounded-lg border border-zinc-700 bg-zinc-800"
-              whileHover={{ scale: 1.05 }}
-            >
-              <div className="relative w-16 h-16 mb-2">
-                {<img
-                  src={hero.image}
-                  alt={hero.name}
-                  className="rounded-md"
-                />}
-              </div>
-              <span className="text-zinc-300 text-xs text-center line-clamp-1">{hero.name}</span>
-              <span className="text-zinc-400 text-xs">Pick Rate: {hero.pickRate}%</span>
-            </motion.div>
-          ))}
-        </div>
-        <h2 className="text-4xl font-bold tracking-tight text-zinc-100 sm:text-5xl">
-          Your Heroes
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-          {userHeroes.map(hero => (
-            <motion.div
-              key={hero.id}
-              className="flex flex-col items-center p-2 rounded-lg border border-zinc-700 bg-zinc-800"
-              whileHover={{ scale: 1.05 }}
-            >
-              <div className="relative w-16 h-16 mb-2">
-               {/*  <img
-                  src={hero.image}
-                  alt={hero.name}
-                  className="rounded-md"
-                /> */}
-              </div>
-              <span className="text-zinc-300 text-xs text-center line-clamp-1">{hero.name}</span>
-              <span className="text-zinc-400 text-xs">Pick Rate: {hero.pickRate}%</span>
-            </motion.div>
-          ))}
-        </div>
-        <OtherUsersHeroes />
+    <div>
+      <h2 className="text-4xl font-bold tracking-tight text-zinc-100 sm:text-5xl mb-8">
+        Your Last Played Heroes
+      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+        {userHeroes.map(hero => (
+          <motion.div
+            key={hero.id}
+            className="flex flex-col items-center p-4 rounded-lg border border-zinc-700 bg-zinc-800"
+            whileHover={{ scale: 1.05 }}
+          >
+            <div className="relative w-32 h-18 mb-4">
+              <Image
+                src={`/images/heroesIMG/${hero.shortName}.png`}
+                alt={hero.name}
+                width={128}
+                height={72}
+                className="rounded-md"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.onerror = null;
+                  target.src = '/images/heroesIMG/default_hero.png';
+                }}
+              />
+            </div>
+            <span className="text-zinc-300 text-sm font-semibold text-center">{hero.name}</span>
+            <span className="text-zinc-400 text-xs mt-1">
+              Last Played: {new Date(hero.lastPlayedDateTime).toLocaleDateString()}
+            </span>
+          </motion.div>
+        ))}
       </div>
     </div>
   );
